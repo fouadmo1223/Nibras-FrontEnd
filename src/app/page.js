@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import ApiStatus, { ApiStatusSkeleton } from '@/components/sections/ApiStatus';
+import AuthNav from '@/components/layout/AuthNav';
 import Logo from '@/components/ui/Logo';
 
 const SWATCHES = [
@@ -18,7 +19,10 @@ const SWATCHES = [
 export default function FoundationPage() {
   return (
     <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col justify-center px-6 py-20">
-      <Logo className="mb-12" />
+      <div className="mb-12 flex items-center justify-between gap-4">
+        <Logo />
+        <AuthNav />
+      </div>
       <p className="font-mono text-xs uppercase tracking-[0.2em] text-foreground-subtle">Phase 1 · Foundation</p>
       <h1 className="mt-5 max-w-3xl font-display text-5xl text-foreground sm:text-6xl">
         Learning, <em className="text-primary">crafted</em> with care.

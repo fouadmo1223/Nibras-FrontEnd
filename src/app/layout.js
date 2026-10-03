@@ -1,6 +1,7 @@
 import { Fraunces, Geist, Geist_Mono, IBM_Plex_Sans_Arabic } from 'next/font/google';
 import { brand } from '@/constants/brand';
 import { env } from '@/lib/env';
+import Toaster from '@/components/ui/Toaster';
 import Providers from './providers';
 import './globals.css';
 
@@ -31,13 +32,19 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
   return (
+    // suppressHydrationWarning: extensions (ColorZilla, Grammarly…) add attributes to <html>/<body>
+    // before React hydrates. It only silences attribute diffs on these two elements, not their children.
     <html
+      suppressHydrationWarning
       lang="en"
       dir="ltr"
       className={`${geist.variable} ${geistMono.variable} ${fraunces.variable} ${plexArabic.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col">
-        <Providers>{children}</Providers>
+      <body className="flex min-h-full flex-col" suppressHydrationWarning>
+        <Providers>
+          {children}
+          <Toaster />
+        </Providers>
       </body>
     </html>
   );

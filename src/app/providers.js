@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ApiError } from '@/lib/api-client';
+import { ApiError, onSessionExpired } from '@/lib/api-client';
+import { authKeys, isSessionQuery } from '@/services/auth.service';
 
 function makeQueryClient() {
   return new QueryClient({
@@ -20,5 +21,16 @@ function makeQueryClient() {
 
 export default function Providers({ children }) {
   const [queryClient] = useState(makeQueryClient);
+
+  // When a refresh fails (session revoked/expired), drop private data and mark the user signed out.
+  useEffect(
+    () =>
+      onSessionExpired(() => {
+        queryClient.removeQueries({ predicate: (q) => !isSessionQuery(q) });
+        queryClient.setQueryData(authKeys.session(), null);
+      }),
+    [queryClient],
+  );
+
   return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
 }

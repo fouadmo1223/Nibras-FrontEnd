@@ -1,5 +1,17 @@
 import { env } from './env';
 
+const SAFE_METHODS = new Set(['GET', 'HEAD', 'OPTIONS']);
+/** The API sets a readable `nb_session=1` cookie while a refresh token exists. */
+const hasSessionHint = () => typeof document !== 'undefined' && /(?:^|;\s*)nb_session=1/.test(document.cookie);
+
+/**
+ * 401s worth one refresh attempt: an expired access token, or a missing/invalid one while
+ * the session hint says a refresh token should still exist.
+ */
+const shouldRefresh = (error) =>
+  error.code === 'TOKEN_EXPIRED' || (hasSessionHint() && ['UNAUTHORIZED', 'SESSION_EXPIRED'].includes(error.code));
+const AUTH_PATHS_WITHOUT_REFRESH = ['/auth/login', '/auth/register', '/auth/refresh', '/auth/logout'];
+
 /** Error raised for any non-2xx API response, carrying the API error envelope. */
 export class ApiError extends Error {
   constructor(status, body, options) {
@@ -12,6 +24,23 @@ export class ApiError extends Error {
   }
 }
 
+// ─── CSRF ────────────────────────────────────────────────────────────────
+// The API returns a session-bound CSRF token with login/register/refresh/session.
+// It lives in memory only and is echoed on every state-changing request.
+let csrfToken = null;
+export const setCsrfToken = (token) => {
+  csrfToken = token || null;
+};
+export const getCsrfToken = () => csrfToken;
+
+// ─── Session-expired notification ────────────────────────────────────────
+const expiredListeners = new Set();
+/** Subscribe to "the session is gone" (refresh failed). Returns an unsubscribe function. */
+export function onSessionExpired(listener) {
+  expiredListeners.add(listener);
+  return () => expiredListeners.delete(listener);
+}
+
 function buildUrl(path, query) {
   const url = new URL(`${env.apiUrl}${path.startsWith('/') ? path : `/${path}`}`);
   if (query) {
@@ -22,13 +51,7 @@ function buildUrl(path, query) {
   return url.toString();
 }
 
-/**
- * Single entry point for calls to the NestJS API. Unwraps the standard
- * `{ success, data, meta }` envelope and normalises failures into ApiError.
- *
- * Extra `init` options (e.g. `next: { tags }`, `cache`) pass straight to fetch.
- */
-export async function apiRequest(path, { method = 'GET', body, query, headers, ...init } = {}) {
+async function send(path, { method = 'GET', body, query, headers, ...init }) {
   let response;
   try {
     response = await fetch(buildUrl(path, query), {
@@ -36,10 +59,12 @@ export async function apiRequest(path, { method = 'GET', body, query, headers, .
       credentials: 'include',
       headers: {
         Accept: 'application/json',
-        ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}),
+        // FormData (file uploads) sets its own multipart boundary header.
+        ...(body !== undefined && !(body instanceof FormData) ? { 'Content-Type': 'application/json' } : {}),
+        ...(!SAFE_METHODS.has(method) && csrfToken ? { 'X-CSRF-Token': csrfToken } : {}),
         ...headers,
       },
-      body: body !== undefined ? JSON.stringify(body) : undefined,
+      body: body === undefined || body instanceof FormData ? body : JSON.stringify(body),
       ...init,
     });
   } catch (cause) {
@@ -48,5 +73,63 @@ export async function apiRequest(path, { method = 'GET', body, query, headers, .
 
   const payload = response.status === 204 ? null : await response.json().catch(() => null);
   if (!response.ok || payload?.success === false) throw new ApiError(response.status, payload);
-  return payload ? { data: payload.data, meta: payload.meta } : { data: null, meta: undefined };
+  // `message` is the API's user-facing confirmation text; clients show it as-is.
+  return payload
+    ? { data: payload.data, message: payload.message, meta: payload.meta }
+    : { data: null, message: undefined, meta: undefined };
+}
+
+// ─── Coordinated refresh ─────────────────────────────────────────────────
+// Concurrent 401s share one refresh request; a REFRESH_RACE (another tab
+// rotated first — its new cookie is already in the jar) is retried once.
+let refreshInFlight = null;
+
+export function refreshSession() {
+  refreshInFlight ??= (async () => {
+    try {
+      const { data } = await send('/auth/refresh', { method: 'POST' });
+      setCsrfToken(data.csrfToken);
+      return data;
+    } catch (error) {
+      if (error instanceof ApiError && error.code === 'REFRESH_RACE') {
+        const { data } = await send('/auth/refresh', { method: 'POST' });
+        setCsrfToken(data.csrfToken);
+        return data;
+      }
+      throw error;
+    }
+  })().finally(() => {
+    refreshInFlight = null;
+  });
+  return refreshInFlight;
+}
+
+/**
+ * Single entry point for calls to the NestJS API. Unwraps the standard
+ * `{ success, data, meta }` envelope and normalises failures into ApiError.
+ * In the browser, an expired access token triggers one refresh and a retry.
+ *
+ * Extra `init` options (e.g. `next: { tags }`, `cache`) pass straight to fetch.
+ */
+export async function apiRequest(path, options = {}) {
+  try {
+    return await send(path, options);
+  } catch (error) {
+    const canRefresh =
+      typeof window !== 'undefined' &&
+      error instanceof ApiError &&
+      error.status === 401 &&
+      shouldRefresh(error) &&
+      !AUTH_PATHS_WITHOUT_REFRESH.some((p) => path.startsWith(p));
+    if (!canRefresh) throw error;
+
+    try {
+      await refreshSession();
+    } catch (refreshError) {
+      setCsrfToken(null);
+      expiredListeners.forEach((listener) => listener(refreshError));
+      throw refreshError;
+    }
+    return send(path, options);
+  }
 }
