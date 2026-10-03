@@ -1,6 +1,11 @@
 import { env } from './env';
 
 const SAFE_METHODS = new Set(['GET', 'HEAD', 'OPTIONS']);
+/**
+ * The page language (<html lang>, set from the route) — sent as Accept-Language so the
+ * API answers with messages in the language the user is reading.
+ */
+const pageLocale = () => (typeof document !== 'undefined' && document.documentElement.lang) || 'en';
 /** The API sets a readable `nb_session=1` cookie while a refresh token exists. */
 const hasSessionHint = () => typeof document !== 'undefined' && /(?:^|;\s*)nb_session=1/.test(document.cookie);
 
@@ -59,6 +64,7 @@ async function send(path, { method = 'GET', body, query, headers, ...init }) {
       credentials: 'include',
       headers: {
         Accept: 'application/json',
+        'Accept-Language': pageLocale(),
         // FormData (file uploads) sets its own multipart boundary header.
         ...(body !== undefined && !(body instanceof FormData) ? { 'Content-Type': 'application/json' } : {}),
         ...(!SAFE_METHODS.has(method) && csrfToken ? { 'X-CSRF-Token': csrfToken } : {}),
@@ -146,6 +152,7 @@ function sendWithProgress(path, { method, body, onProgress }) {
     xhr.open(method, buildUrl(path));
     xhr.withCredentials = true;
     xhr.setRequestHeader('Accept', 'application/json');
+    xhr.setRequestHeader('Accept-Language', pageLocale());
     if (csrfToken) xhr.setRequestHeader('X-CSRF-Token', csrfToken);
     xhr.upload.onprogress = (event) => {
       if (event.lengthComputable) onProgress?.(Math.round((event.loaded / event.total) * 100));

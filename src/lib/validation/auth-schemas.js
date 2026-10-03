@@ -1,40 +1,57 @@
 import { z } from 'zod';
 
 // Mirrors the API's DTO rules so users get instant feedback; the API remains the authority.
+// Schemas are built per language: pass the page's `t` (useI18n) so messages are translated.
 export const PASSWORD_MIN = 10;
 export const PASSWORD_MAX = 128;
+export const NAME_MAX = 120;
 
-const email = z.string().trim().min(1, 'Enter your email.').pipe(z.email('Enter a valid email address.'));
-const newPassword = z
-  .string()
-  .min(PASSWORD_MIN, `Use at least ${PASSWORD_MIN} characters.`)
-  .max(PASSWORD_MAX, `Use at most ${PASSWORD_MAX} characters.`);
+const emailField = (t) =>
+  z
+    .string()
+    .trim()
+    .min(1, t('validation.emailRequired'))
+    .pipe(z.email(t('validation.emailInvalid')));
 
-export const loginSchema = z.object({
-  email,
-  password: z.string().min(1, 'Enter your password.'),
-});
+const newPasswordField = (t) =>
+  z
+    .string()
+    .min(PASSWORD_MIN, t('validation.passwordMin', { min: PASSWORD_MIN }))
+    .max(PASSWORD_MAX, t('validation.passwordMax', { max: PASSWORD_MAX }));
 
-export const registerSchema = z.object({
-  name: z.string().trim().min(2, 'Enter your full name.').max(120),
-  email,
-  password: newPassword,
-});
+export const loginSchema = (t) =>
+  z.object({
+    email: emailField(t),
+    password: z.string().min(1, t('validation.passwordRequired')),
+  });
 
-export const forgotPasswordSchema = z.object({ email });
+export const registerSchema = (t) =>
+  z.object({
+    name: z
+      .string()
+      .trim()
+      .min(2, t('validation.nameRequired'))
+      .max(NAME_MAX, t('validation.nameMax', { max: NAME_MAX })),
+    email: emailField(t),
+    password: newPasswordField(t),
+  });
 
-export const resetPasswordSchema = z
-  .object({ password: newPassword, confirmPassword: z.string() })
-  .refine((v) => v.password === v.confirmPassword, { path: ['confirmPassword'], message: 'Passwords don’t match.' });
+export const forgotPasswordSchema = (t) => z.object({ email: emailField(t) });
 
-export const changePasswordSchema = z
-  .object({
-    currentPassword: z.string().min(1, 'Enter your current password.'),
-    newPassword,
-    confirmPassword: z.string(),
-  })
-  .refine((v) => v.newPassword === v.confirmPassword, { path: ['confirmPassword'], message: 'Passwords don’t match.' })
-  .refine((v) => v.newPassword !== v.currentPassword, { path: ['newPassword'], message: 'Choose a different password.' });
+export const resetPasswordSchema = (t) =>
+  z
+    .object({ password: newPasswordField(t), confirmPassword: z.string() })
+    .refine((v) => v.password === v.confirmPassword, { path: ['confirmPassword'], message: t('validation.passwordsMismatch') });
+
+export const changePasswordSchema = (t) =>
+  z
+    .object({
+      currentPassword: z.string().min(1, t('validation.currentPasswordRequired')),
+      newPassword: newPasswordField(t),
+      confirmPassword: z.string(),
+    })
+    .refine((v) => v.newPassword === v.confirmPassword, { path: ['confirmPassword'], message: t('validation.passwordsMismatch') })
+    .refine((v) => v.newPassword !== v.currentPassword, { path: ['newPassword'], message: t('validation.passwordUnchanged') });
 
 /** Rough strength meter (0–4) for UX only — length and character variety. */
 export function passwordStrength(value = '') {

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useId, useRef } from 'react';
+import { useI18n } from '@/i18n/I18nProvider';
 import Button from './Button';
 
 /**
@@ -11,14 +12,15 @@ export default function ConfirmDialog({
   open,
   title,
   description,
-  confirmLabel = 'Confirm',
-  cancelLabel = 'Cancel',
+  confirmLabel,
+  cancelLabel,
   tone = 'primary',
   icon: Icon,
   loading = false,
   onConfirm,
   onCancel,
 }) {
+  const { t } = useI18n();
   const ref = useRef(null);
   const cancelRef = useRef(null);
   const titleId = useId();
@@ -67,14 +69,14 @@ export default function ConfirmDialog({
         )}
         <div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
           <Button ref={cancelRef} variant="secondary" onClick={onCancel} disabled={loading}>
-            {cancelLabel}
+            {cancelLabel ?? t('common.cancel')}
           </Button>
           <Button
             onClick={onConfirm}
             loading={loading}
             className={tone === 'danger' ? 'bg-error text-white shadow-none hover:bg-error/90' : undefined}
           >
-            {confirmLabel}
+            {confirmLabel ?? t('common.confirm')}
           </Button>
         </div>
       </div>

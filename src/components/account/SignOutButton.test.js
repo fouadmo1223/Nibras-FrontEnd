@@ -2,6 +2,7 @@ import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { withI18n } from '@/test/i18n';
 import { useToastStore } from '@/stores/toast-store';
 import SignOutButton from './SignOutButton';
 
@@ -26,9 +27,11 @@ afterEach(() => {
 function renderButton() {
   const client = new QueryClient({ defaultOptions: { mutations: { retry: false } } });
   render(
-    <QueryClientProvider client={client}>
-      <SignOutButton />
-    </QueryClientProvider>,
+    withI18n(
+      <QueryClientProvider client={client}>
+        <SignOutButton />
+      </QueryClientProvider>,
+    ),
   );
 }
 
@@ -58,7 +61,7 @@ describe('SignOutButton', () => {
     const dialog = screen.getByRole('dialog');
     await userEvent.click(dialog.querySelectorAll('button')[1]); // confirm
 
-    await vi.waitFor(() => expect(replace).toHaveBeenCalledWith('/login'));
+    await vi.waitFor(() => expect(replace).toHaveBeenCalledWith('/en/login'));
     expect(fetch.mock.calls[0][0]).toMatch(/\/auth\/logout$/);
     expect(useToastStore.getState().toasts.at(-1)).toMatchObject({ message: 'You have been signed out.' });
   });

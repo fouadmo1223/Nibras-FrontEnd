@@ -1,9 +1,14 @@
 import { Fraunces, Geist, Geist_Mono, IBM_Plex_Sans_Arabic } from 'next/font/google';
 import { brand } from '@/constants/brand';
 import { env } from '@/lib/env';
+import { THEME_SCRIPT } from '@/lib/theme-script';
+import InlineScript from '@/components/ui/InlineScript';
 import Toaster from '@/components/ui/Toaster';
+import I18nProvider from '@/i18n/I18nProvider';
+import { dirOf, LOCALE_META, LOCALES } from '@/i18n/config';
+import { getI18n, getMessages } from '@/i18n/dictionaries';
 import Providers from './providers';
-import './globals.css';
+import '../globals.css';
 
 const geist = Geist({ variable: '--font-geist', subsets: ['latin'], display: 'swap' });
 const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'], display: 'swap' });
@@ -15,13 +20,27 @@ const plexArabic = IBM_Plex_Sans_Arabic({
   display: 'swap',
 });
 
-export const metadata = {
-  metadataBase: new URL(env.siteUrl),
-  title: { default: `${brand.name} — ${brand.tagline.en}`, template: `%s · ${brand.name}` },
-  description: brand.description.en,
-  applicationName: brand.name,
-  openGraph: { siteName: brand.name, type: 'website' },
-};
+// /en and /ar are prerendered. Other first segments never reach here as locales: the proxy
+// redirects locale-less URLs, and getLocale() 404s anything unsupported.
+export function generateStaticParams() {
+  return LOCALES.map((lang) => ({ lang }));
+}
+
+export async function generateMetadata() {
+  const { t, locale } = await getI18n();
+  return {
+    metadataBase: new URL(env.siteUrl),
+    title: { default: t('meta.title'), template: `%s · ${locale === 'ar' ? brand.nameAr : brand.name}` },
+    description: t('meta.description'),
+    applicationName: brand.name,
+    openGraph: {
+      siteName: brand.name,
+      type: 'website',
+      locale: LOCALE_META[locale].ogLocale,
+      alternateLocale: LOCALES.filter((l) => l !== locale).map((l) => LOCALE_META[l].ogLocale),
+    },
+  };
+}
 
 export const viewport = {
   themeColor: [
@@ -30,21 +49,29 @@ export const viewport = {
   ],
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const { locale, messages } = await getI18n();
+  const fallback = locale === 'en' ? null : await getMessages('en');
+
   return (
-    // suppressHydrationWarning: extensions (ColorZilla, Grammarly…) add attributes to <html>/<body>
-    // before React hydrates. It only silences attribute diffs on these two elements, not their children.
+    // suppressHydrationWarning: the theme script sets data-theme before hydration, and extensions
+    // (ColorZilla, Grammarly…) add attributes to <html>/<body>. Only these two elements' attributes are affected.
     <html
       suppressHydrationWarning
-      lang="en"
-      dir="ltr"
+      lang={locale}
+      dir={dirOf(locale)}
       className={`${geist.variable} ${geistMono.variable} ${fraunces.variable} ${plexArabic.variable} h-full antialiased`}
     >
+      <head>
+        <InlineScript html={THEME_SCRIPT} />
+      </head>
       <body className="flex min-h-full flex-col" suppressHydrationWarning>
-        <Providers>
-          {children}
-          <Toaster />
-        </Providers>
+        <I18nProvider locale={locale} messages={messages} fallback={fallback}>
+          <Providers>
+            {children}
+            <Toaster />
+          </Providers>
+        </I18nProvider>
       </body>
     </html>
   );

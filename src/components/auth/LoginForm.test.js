@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { withI18n } from '@/test/i18n';
 import { useToastStore } from '@/stores/toast-store';
 import LoginForm from './LoginForm';
 
@@ -15,9 +16,11 @@ vi.mock('next/navigation', () => ({
 function renderForm() {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } });
   render(
-    <QueryClientProvider client={client}>
-      <LoginForm />
-    </QueryClientProvider>,
+    withI18n(
+      <QueryClientProvider client={client}>
+        <LoginForm />
+      </QueryClientProvider>,
+    ),
   );
 }
 
@@ -65,7 +68,7 @@ describe('LoginForm', () => {
     await userEvent.type(screen.getByLabelText('Password'), 'correct password');
     await userEvent.click(screen.getByRole('button', { name: 'Sign in' }));
 
-    await vi.waitFor(() => expect(replace).toHaveBeenCalledWith('/account?tab=security'));
+    await vi.waitFor(() => expect(replace).toHaveBeenCalledWith('/en/account?tab=security'));
     // The API's success message is queued as a toast.
     expect(useToastStore.getState().toasts.at(-1)).toMatchObject({ tone: 'success', message: 'Welcome back, Layla.' });
     const [, init] = fetch.mock.calls[0];
@@ -82,6 +85,6 @@ describe('LoginForm', () => {
     await userEvent.type(screen.getByLabelText('Password'), 'correct password');
     await userEvent.click(screen.getByRole('button', { name: 'Sign in' }));
 
-    await vi.waitFor(() => expect(replace).toHaveBeenCalledWith('/account'));
+    await vi.waitFor(() => expect(replace).toHaveBeenCalledWith('/en/account'));
   });
 });

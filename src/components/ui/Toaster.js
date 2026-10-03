@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion } from 'motion/react';
 import { CircleAlert, CircleCheck, X } from 'lucide-react';
+import { useI18n } from '@/i18n/I18nProvider';
 import { cn } from '@/lib/cn';
 import { useToastStore } from '@/stores/toast-store';
 
@@ -12,6 +13,7 @@ const TONES = {
 
 /** Renders API success/error messages as dismissible toasts (polite live region). */
 export default function Toaster() {
+  const { t } = useI18n();
   const toasts = useToastStore((s) => s.toasts);
   const dismiss = useToastStore((s) => s.dismiss);
 
@@ -22,13 +24,13 @@ export default function Toaster() {
       className="pointer-events-none fixed inset-x-4 bottom-4 z-50 flex flex-col items-center gap-2 sm:inset-x-auto sm:end-6 sm:bottom-6 sm:items-end"
     >
       <AnimatePresence initial={false}>
-        {toasts.map((t) => {
-          const { icon: Icon, accent } = TONES[t.tone];
+        {toasts.map((toast) => {
+          const { icon: Icon, accent } = TONES[toast.tone];
           return (
             <motion.div
-              key={t.id}
+              key={toast.id}
               layout
-              role={t.tone === 'error' ? 'alert' : 'status'}
+              role={toast.tone === 'error' ? 'alert' : 'status'}
               initial={{ opacity: 0, y: 16, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 8, transition: { duration: 0.15 } }}
@@ -36,11 +38,11 @@ export default function Toaster() {
               className="pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-lg border border-border bg-surface-raised p-4 text-sm text-foreground shadow-elevation-3"
             >
               <Icon className={cn('mt-0.5 size-[18px] shrink-0', accent)} aria-hidden="true" />
-              <p className="flex-1 leading-5">{t.message}</p>
+              <p className="flex-1 leading-5">{toast.message}</p>
               <button
                 type="button"
-                onClick={() => dismiss(t.id)}
-                aria-label="Dismiss notification"
+                onClick={() => dismiss(toast.id)}
+                aria-label={t('common.dismissNotification')}
                 className="-m-1 rounded p-1 text-foreground-subtle transition-colors hover:text-foreground"
               >
                 <X className="size-4" />

@@ -54,3 +54,6 @@ export function uploadAvatar(file, onProgress) {
   return apiUpload('/users/me/avatar', form, { onProgress });
 }
 export const removeAvatar = () => apiRequest('/users/me/avatar', { method: 'DELETE' });
+
+/** Saves profile fields (name, locale). The saved locale is the language of the user's emails. */
+export const updateProfile = (body) => apiRequest('/users/me', { method: 'PATCH', body });

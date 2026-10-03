@@ -1,0 +1,233 @@
+{
+  "meta": {
+    "title": "{brand} — {tagline}",
+    "description": "Premium online courses, learning paths and certificates.",
+    "account": "Account",
+    "signIn": "Sign in",
+    "register": "Create your account",
+    "forgotPassword": "Forgot password",
+    "resetPassword": "Reset password",
+    "verifyEmail": "Confirm your email",
+    "notFound": "Page not found"
+  },
+  "common": {
+    "brandHome": "{brand} home",
+    "skipToContent": "Skip to content",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "dismissNotification": "Dismiss notification",
+    "offline": "We couldn’t reach {brand}. Check your connection and try again.",
+    "genericError": "Something went wrong. Please try again."
+  },
+  "nav": {
+    "main": "Main",
+    "home": "Home",
+    "account": "Account",
+    "signIn": "Sign in",
+    "getStarted": "Get started",
+    "accountMenu": "Account menu",
+    "signedInAs": "Signed in as"
+  },
+  "language": {
+    "label": "Language",
+    "change": "Change language, current: {language}"
+  },
+  "theme": {
+    "label": "Theme",
+    "change": "Change theme, current: {theme}",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "footer": {
+    "about": "Courses, learning paths and certificates — built for learners who want to go further.",
+    "explore": "Explore",
+    "account": "Your account",
+    "preferences": "Preferences",
+    "rights": "© {year} {brand}. All rights reserved."
+  },
+  "home": {
+    "eyebrow": "Phase 3 · Layout & navigation",
+    "titleStart": "Learning,",
+    "titleEmphasis": "crafted",
+    "titleEnd": "with care.",
+    "body": "The website, dashboard, mobile app and API share one design system, in English and Arabic, light and dark. The full homepage arrives in the next phase.",
+    "apiHeading": "NestJS API",
+    "tokensHeading": "Design tokens",
+    "swatches": {
+      "primary": "Primary",
+      "secondary": "Secondary",
+      "success": "Success",
+      "warning": "Warning",
+      "error": "Error",
+      "surface": "Surface"
+    }
+  },
+  "apiStatus": {
+    "checking": "Checking API status",
+    "ok": "Operational",
+    "degraded": "Degraded",
+    "down": "Unreachable",
+    "endpoint": "Endpoint",
+    "database": "Database",
+    "version": "Version"
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to continue learning.",
+      "newHere": "New to {brand}?",
+      "createAccount": "Create an account",
+      "forgot": "Forgot password?",
+      "submit": "Sign in"
+    },
+    "register": {
+      "title": "Create your account",
+      "subtitle": "Start learning in minutes. It’s free to join.",
+      "haveAccount": "Already have an account?",
+      "signIn": "Sign in",
+      "passwordHint": "At least {min} characters. A short phrase works well.",
+      "submit": "Create account"
+    },
+    "forgot": {
+      "title": "Forgot your password?",
+      "subtitle": "Enter your email and we’ll send you a link to choose a new one.",
+      "remembered": "Remembered it?",
+      "backToSignIn": "Back to sign in",
+      "checkInbox": "Check your inbox",
+      "submit": "Send reset link"
+    },
+    "reset": {
+      "title": "Choose a new password",
+      "subtitle": "Pick something you haven’t used here before.",
+      "incompleteTitle": "This reset link is incomplete",
+      "incompleteBody": "Open the link from your email again, or",
+      "requestNew": "request a new one",
+      "requestNewLink": "Request a new link",
+      "signsOutEverywhere": "For your security, every device will be signed out.",
+      "submit": "Update password"
+    },
+    "verify": {
+      "title": "Confirm your email",
+      "pending": "Confirming your email…",
+      "successTitle": "Email confirmed",
+      "errorTitle": "We couldn’t confirm your email",
+      "incomplete": "This link is incomplete.",
+      "resendHint": "You can send a new link from your account.",
+      "goToAccount": "Go to your account"
+    }
+  },
+  "fields": {
+    "fullName": "Full name",
+    "namePlaceholder": "Layla Hassan",
+    "email": "Email",
+    "emailPlaceholder": "you@example.com",
+    "password": "Password",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "confirmNewPassword": "Confirm new password",
+    "newPasswordHint": "At least {min} characters."
+  },
+  "validation": {
+    "emailRequired": "Enter your email.",
+    "emailInvalid": "Enter a valid email address.",
+    "passwordRequired": "Enter your password.",
+    "passwordMin": "Use at least {min} characters.",
+    "passwordMax": "Use at most {max} characters.",
+    "nameRequired": "Enter your full name.",
+    "nameMax": "Use at most {max} characters.",
+    "passwordsMismatch": "Passwords don’t match.",
+    "passwordUnchanged": "Choose a different password.",
+    "currentPasswordRequired": "Enter your current password."
+  },
+  "password": {
+    "show": "Show password",
+    "hide": "Hide password",
+    "strength": "Password strength: {label}",
+    "levels": {
+      "tooShort": "Too short",
+      "okay": "Okay",
+      "good": "Good",
+      "strong": "Strong",
+      "excellent": "Excellent"
+    }
+  },
+  "account": {
+    "loading": "Loading your account",
+    "welcome": "Welcome to {brand}",
+    "settings": "Account settings",
+    "hi": "Hi, {name}",
+    "title": "Your account",
+    "verified": "Verified",
+    "unverified": "Unverified",
+    "roles": {
+      "SUPER_ADMIN": "Super Admin",
+      "ADMIN": "Admin",
+      "INSTRUCTOR": "Instructor",
+      "STUDENT": "Student"
+    },
+    "verifyBanner": {
+      "title": "Confirm your email",
+      "body": "We sent a link to {email}.",
+      "resend": "Resend link",
+      "sent": "Sent"
+    },
+    "password": {
+      "title": "Password",
+      "description": "Changing it signs out your other devices.",
+      "submit": "Update password"
+    },
+    "devices": {
+      "title": "Devices",
+      "description": "Where you’re signed in. Sign out anything you don’t recognise."
+    },
+    "preferences": {
+      "title": "Language & appearance",
+      "description": "Your language is saved to your account, so emails arrive in it too."
+    }
+  },
+  "sessions": {
+    "loading": "Loading devices",
+    "thisDevice": "This device",
+    "unknownLocation": "Unknown location",
+    "lastActive": "active {time}",
+    "signOut": "Sign out",
+    "signOutDevice": "Sign out {device}",
+    "signOutOthers": "Sign out all other devices",
+    "app": "{brand} app",
+    "unknownDevice": "Unknown device",
+    "browser": "Browser",
+    "browserOn": "{browser} on {os}"
+  },
+  "avatar": {
+    "change": "Change",
+    "upload": "Upload photo",
+    "remove": "Remove",
+    "changeLabel": "Change profile photo",
+    "uploadLabel": "Upload a profile photo",
+    "optimizing": "Optimizing…",
+    "processingStatus": "Upload complete, optimizing your photo",
+    "uploadingStatus": "Uploading {progress} percent",
+    "requirements": "JPG, PNG, WebP, GIF or HEIC · up to 5 MB"
+  },
+  "signOut": {
+    "button": "Sign out",
+    "title": "Sign out of {brand}?",
+    "description": "You’ll need to sign in again to continue learning on this device. Your progress is saved.",
+    "confirm": "Sign out"
+  },
+  "showcase": {
+    "course": "Design Foundations",
+    "lesson": "Lesson {current} of {total}",
+    "videoLesson": "Video lesson",
+    "quizComplete": "Quiz complete",
+    "certificate": "Certificate earned"
+  },
+  "notFound": {
+    "title": "This page doesn’t exist",
+    "body": "The link may be broken, or the page may have moved.",
+    "home": "Back to home"
+  }
+}

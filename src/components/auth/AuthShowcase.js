@@ -4,6 +4,7 @@ import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } fro
 import { Award, BookOpen, Play, Star } from 'lucide-react';
 import { brand } from '@/constants/brand';
 import { useMediaQuery } from '@/hooks/use-media-query';
+import { useI18n } from '@/i18n/I18nProvider';
 
 const { mark, colors } = brand;
 const ease = [0.45, 0, 0.55, 1];
@@ -64,6 +65,7 @@ function Lamp({ still }) {
 }
 
 function ShowcaseScene({ animate }) {
+  const { t } = useI18n();
   const still = useReducedMotion() || !animate;
   const pointerX = useMotionValue(0);
   const pointerY = useMotionValue(0);
@@ -105,8 +107,8 @@ function ShowcaseScene({ animate }) {
             <BookOpen className="size-4" aria-hidden="true" />
           </span>
           <div className="min-w-0">
-            <p className="truncate text-sm font-semibold">Design Foundations</p>
-            <p className="text-xs text-white/60">Lesson 8 of 12</p>
+            <p className="truncate text-sm font-semibold">{t('showcase.course')}</p>
+            <p className="text-xs text-white/60">{t('showcase.lesson', { current: 8, total: 12 })}</p>
           </div>
         </div>
         <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/15">
@@ -140,12 +142,12 @@ function ShowcaseScene({ animate }) {
             transition={still ? undefined : { duration: 12, repeat: Infinity, ease: 'linear' }}
           />
         </div>
-        <p className="mt-2 text-xs text-white/60">Video lesson</p>
+        <p className="mt-2 text-xs text-white/60">{t('showcase.videoLesson')}</p>
       </FloatCard>
 
       {/* Quiz */}
       <FloatCard className="right-[10%] bottom-[10%] w-52" depth={22} delay={0.55} {...shared}>
-        <p className="text-sm font-semibold">Quiz complete</p>
+        <p className="text-sm font-semibold">{t('showcase.quizComplete')}</p>
         <div className="mt-2 flex gap-1">
           {[0, 1, 2, 3, 4].map((i) => (
             <motion.span
@@ -167,7 +169,7 @@ function ShowcaseScene({ animate }) {
             <Award className="size-5" aria-hidden="true" />
           </span>
           <div>
-            <p className="text-sm font-semibold">Certificate earned</p>
+            <p className="text-sm font-semibold">{t('showcase.certificate')}</p>
             <svg viewBox="0 0 24 24" className="mt-1 size-5 text-emerald-500" aria-hidden="true">
               <motion.path
                 d="M5 12.5l4.5 4.5L19 7.5"
@@ -191,6 +193,8 @@ function ShowcaseScene({ animate }) {
 export default function AuthShowcase() {
   // Static on the server and on small screens; loops start once a desktop browser has hydrated.
   const desktop = useMediaQuery('(min-width: 1024px)');
+  const { locale } = useI18n();
+  const other = locale === 'ar' ? 'en' : 'ar';
 
   return (
     <aside aria-hidden="true" className="relative flex h-full flex-col overflow-hidden bg-cobalt-950 text-white">
@@ -199,9 +203,11 @@ export default function AuthShowcase() {
         <ShowcaseScene animate={desktop} />
       </div>
       <div className="pointer-events-none relative px-14 pb-14 pt-2">
-        <p className="max-w-md font-display text-5xl leading-[1.05] tracking-tight">{brand.tagline.en}</p>
-        <p lang="ar" dir="rtl" className="mt-3 max-w-md font-arabic text-2xl text-white/70">
-          {brand.tagline.ar}
+        <p className={`max-w-md text-5xl leading-[1.1] tracking-tight ${locale === 'ar' ? 'font-arabic font-semibold' : 'font-display'}`}>
+          {brand.tagline[locale]}
+        </p>
+        <p lang={other} dir={other === 'ar' ? 'rtl' : 'ltr'} className={`mt-3 max-w-md text-2xl text-white/70 ${other === 'ar' ? 'font-arabic' : 'font-display'}`}>
+          {brand.tagline[other]}
         </p>
       </div>
     </aside>

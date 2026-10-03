@@ -1,7 +1,7 @@
 /** Human-readable device summary from a user-agent string (display only, never for decisions). */
-export function describeDevice(userAgent, clientType) {
-  if (clientType === 'MOBILE') return 'Nibras app';
-  if (!userAgent) return 'Unknown device';
+export function describeDevice(userAgent, clientType, t) {
+  if (clientType === 'MOBILE') return t('sessions.app');
+  if (!userAgent) return t('sessions.unknownDevice');
   const browser = /Edg\//.test(userAgent)
     ? 'Edge'
     : /OPR\//.test(userAgent)
@@ -12,7 +12,7 @@ export function describeDevice(userAgent, clientType) {
           ? 'Chrome'
           : /Safari\//.test(userAgent)
             ? 'Safari'
-            : 'Browser';
+            : t('sessions.browser');
   const os = /Windows/.test(userAgent)
     ? 'Windows'
     : /iPhone|iPad/.test(userAgent)
@@ -24,23 +24,5 @@ export function describeDevice(userAgent, clientType) {
           : /Linux/.test(userAgent)
             ? 'Linux'
             : null;
-  return os ? `${browser} on ${os}` : browser;
-}
-
-const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
-const UNITS = [
-  ['year', 31_536_000],
-  ['month', 2_592_000],
-  ['week', 604_800],
-  ['day', 86_400],
-  ['hour', 3_600],
-  ['minute', 60],
-];
-
-export function relativeTime(date, now = Date.now()) {
-  const seconds = Math.round((new Date(date).getTime() - now) / 1000);
-  for (const [unit, size] of UNITS) {
-    if (Math.abs(seconds) >= size) return rtf.format(Math.round(seconds / size), unit);
-  }
-  return 'just now';
+  return os ? t('sessions.browserOn', { browser, os }) : browser;
 }

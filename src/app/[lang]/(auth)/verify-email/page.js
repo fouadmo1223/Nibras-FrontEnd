@@ -1,12 +1,17 @@
 import { Suspense } from 'react';
 import AuthShell from '@/components/auth/AuthShell';
 import VerifyEmail from '@/components/auth/VerifyEmail';
+import { getI18n } from '@/i18n/dictionaries';
 
-export const metadata = { title: 'Confirm your email', robots: { index: false } };
+export async function generateMetadata() {
+  const { t } = await getI18n();
+  return { title: t('meta.verifyEmail'), robots: { index: false } };
+}
 
-export default function VerifyEmailPage() {
+export default async function VerifyEmailPage() {
+  const { t } = await getI18n();
   return (
-    <AuthShell title="Confirm your email">
+    <AuthShell title={t('auth.verify.title')}>
       <Suspense>
         <VerifyEmail />
       </Suspense>

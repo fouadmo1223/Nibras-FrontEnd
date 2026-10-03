@@ -6,6 +6,7 @@ import { Camera, Trash2 } from 'lucide-react';
 import Avatar from '@/components/ui/Avatar';
 import Button from '@/components/ui/Button';
 import { useUpdateSessionUser } from '@/hooks/use-auth';
+import { useI18n } from '@/i18n/I18nProvider';
 import { errorMessage } from '@/lib/api-errors';
 import { removeAvatar, uploadAvatar } from '@/services/auth.service';
 import { toast } from '@/stores/toast-store';
@@ -38,6 +39,7 @@ function ProgressRing({ percent, processing }) {
  * decoding) happens in the API; its success or error message is shown as-is.
  */
 export default function AvatarUploader({ user }) {
+  const { t } = useI18n();
   const input = useRef(null);
   const updateUser = useUpdateSessionUser();
   const [progress, setProgress] = useState(0);
@@ -51,7 +53,7 @@ export default function AvatarUploader({ user }) {
       updateUser(result.data);
       toast.success(result.message);
     },
-    onError: (error) => toast.error(errorMessage(error)),
+    onError: (error) => toast.error(errorMessage(error, t)),
   };
   const upload = useMutation({
     mutationFn: (file) => uploadAvatar(file, setProgress),
@@ -80,7 +82,7 @@ export default function AvatarUploader({ user }) {
           type="button"
           onClick={() => input.current?.click()}
           disabled={uploading}
-          aria-label={user.avatarUrl ? 'Change profile photo' : 'Upload a profile photo'}
+          aria-label={user.avatarUrl ? t('avatar.changeLabel') : t('avatar.uploadLabel')}
           className="group relative block rounded-full focus-visible:outline-offset-4"
         >
           <Avatar user={shown} size="xl" className="size-28 text-4xl ring-4 ring-surface" />
@@ -89,7 +91,7 @@ export default function AvatarUploader({ user }) {
           >
             {uploading ? (
               <span className="text-sm font-semibold tabular-nums" aria-live="polite">
-                {processing ? 'Optimizing…' : `${progress}%`}
+                {processing ? t('avatar.optimizing') : `${progress}%`}
               </span>
             ) : (
               <Camera className="size-6" aria-hidden="true" />
@@ -99,7 +101,7 @@ export default function AvatarUploader({ user }) {
         {uploading && <ProgressRing percent={progress} processing={processing} />}
         {uploading && (
           <span className="sr-only" role="status">
-            {processing ? 'Upload complete, optimizing your photo' : `Uploading ${progress} percent`}
+            {processing ? t('avatar.processingStatus') : t('avatar.uploadingStatus', { progress })}
           </span>
         )}
       </div>
@@ -107,16 +109,16 @@ export default function AvatarUploader({ user }) {
       <div className="mt-4 flex flex-wrap justify-center gap-2">
         <Button size="sm" variant="secondary" disabled={uploading} onClick={() => input.current?.click()}>
           <Camera className="size-4" aria-hidden="true" />
-          {user.avatarUrl ? 'Change' : 'Upload photo'}
+          {user.avatarUrl ? t('avatar.change') : t('avatar.upload')}
         </Button>
         {user.avatarUrl && !uploading && (
           <Button size="sm" variant="ghost" loading={remove.isPending} onClick={() => remove.mutate()}>
             <Trash2 className="size-4" aria-hidden="true" />
-            Remove
+            {t('avatar.remove')}
           </Button>
         )}
       </div>
-      <p className="mt-2 text-xs text-foreground-subtle">JPG, PNG, WebP, GIF or HEIC · up to 5 MB</p>
+      <p className="mt-2 text-xs text-foreground-subtle">{t('avatar.requirements')}</p>
       <input
         ref={input}
         type="file"

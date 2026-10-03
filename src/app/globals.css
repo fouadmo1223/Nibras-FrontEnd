@@ -37,10 +37,33 @@
   }
 }
 
+/* Arabic is cursive: any letter-spacing (tracking-* utilities) breaks letter joining. */
+html[dir="rtl"] * {
+  letter-spacing: 0 !important;
+}
+
 /* Entrance for auth forms and similar focal content. */
 @theme {
   --animate-fade-up: fade-up 0.6s cubic-bezier(0.2, 0, 0, 1) both;
   --animate-dialog-in: dialog-in 0.22s cubic-bezier(0.2, 0, 0, 1) both;
+  --animate-sheet-in: sheet-in 0.32s cubic-bezier(0.3, 0, 0, 1) both;
+  --animate-sheet-in-rtl: sheet-in-rtl 0.32s cubic-bezier(0.3, 0, 0, 1) both;
+  @keyframes sheet-in {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: none;
+    }
+  }
+  @keyframes sheet-in-rtl {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: none;
+    }
+  }
   @keyframes dialog-in {
     from {
       opacity: 0;

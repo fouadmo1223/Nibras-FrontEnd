@@ -1,17 +1,24 @@
-import Link from 'next/link';
+import { ArrowLeft } from 'lucide-react';
 import AuthShell from '@/components/auth/AuthShell';
 import ForgotPasswordForm from '@/components/auth/ForgotPasswordForm';
+import { getI18n } from '@/i18n/dictionaries';
+import { Link } from '@/i18n/navigation';
 
-export const metadata = { title: 'Reset your password', robots: { index: false } };
+export async function generateMetadata() {
+  const { t } = await getI18n();
+  return { title: t('meta.forgotPassword'), robots: { index: false } };
+}
 
-export default function ForgotPasswordPage() {
+export default async function ForgotPasswordPage() {
+  const { t } = await getI18n();
   return (
     <AuthShell
-      title="Forgot your password?"
-      subtitle="Enter your email and we’ll send you a link to choose a new one."
+      title={t('auth.forgot.title')}
+      subtitle={t('auth.forgot.subtitle')}
       footer={
-        <Link href="/login" className="font-medium text-primary hover:underline">
-          ← Back to sign in
+        <Link href="/login" className="inline-flex items-center gap-1.5 font-medium text-primary hover:underline">
+          <ArrowLeft className="size-4 rtl:-scale-x-100" aria-hidden="true" />
+          {t('auth.forgot.backToSignIn')}
         </Link>
       }
     >

@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { withI18n } from '@/test/i18n';
 import { useToastStore } from '@/stores/toast-store';
 import AvatarUploader from './AvatarUploader';
 
@@ -43,9 +44,11 @@ function renderUploader(user) {
   const client = new QueryClient({ defaultOptions: { mutations: { retry: false } } });
   client.setQueryData(['auth', 'session'], { user, csrfToken: 'c' });
   render(
-    <QueryClientProvider client={client}>
-      <AvatarUploader user={user} />
-    </QueryClientProvider>,
+    withI18n(
+      <QueryClientProvider client={client}>
+        <AvatarUploader user={user} />
+      </QueryClientProvider>,
+    ),
   );
   return client;
 }

@@ -1,19 +1,24 @@
-import Link from 'next/link';
 import AuthShell from '@/components/auth/AuthShell';
 import RegisterForm from '@/components/auth/RegisterForm';
+import { getI18n } from '@/i18n/dictionaries';
+import { Link } from '@/i18n/navigation';
 
-export const metadata = { title: 'Create your account', robots: { index: false } };
+export async function generateMetadata() {
+  const { t } = await getI18n();
+  return { title: t('meta.register'), robots: { index: false } };
+}
 
-export default function RegisterPage() {
+export default async function RegisterPage() {
+  const { t } = await getI18n();
   return (
     <AuthShell
-      title="Start learning"
-      subtitle="Create your free account in a minute."
+      title={t('auth.register.title')}
+      subtitle={t('auth.register.subtitle')}
       footer={
         <>
-          Already have an account?{' '}
+          {t('auth.register.haveAccount')}{' '}
           <Link href="/login" className="font-medium text-primary hover:underline">
-            Sign in
+            {t('auth.register.signIn')}
           </Link>
         </>
       }

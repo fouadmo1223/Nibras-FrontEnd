@@ -1,12 +1,17 @@
 import { Suspense } from 'react';
 import AuthShell from '@/components/auth/AuthShell';
 import ResetPasswordForm from '@/components/auth/ResetPasswordForm';
+import { getI18n } from '@/i18n/dictionaries';
 
-export const metadata = { title: 'Choose a new password', robots: { index: false } };
+export async function generateMetadata() {
+  const { t } = await getI18n();
+  return { title: t('meta.resetPassword'), robots: { index: false } };
+}
 
-export default function ResetPasswordPage() {
+export default async function ResetPasswordPage() {
+  const { t } = await getI18n();
   return (
-    <AuthShell title="Choose a new password" subtitle="Make it something you don’t use anywhere else.">
+    <AuthShell title={t('auth.reset.title')} subtitle={t('auth.reset.subtitle')}>
       <Suspense>
         <ResetPasswordForm />
       </Suspense>

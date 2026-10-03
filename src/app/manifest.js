@@ -5,7 +5,7 @@ export default function manifest() {
     name: brand.name,
     short_name: brand.name,
     description: brand.description.en,
-    start_url: '/',
+    start_url: '/en',
     display: 'standalone',
     background_color: '#F7F7F5',
     theme_color: brand.colors.light.page,
