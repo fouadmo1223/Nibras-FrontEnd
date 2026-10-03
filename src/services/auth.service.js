@@ -1,4 +1,4 @@
-import { apiRequest, setCsrfToken } from '@/lib/api-client';
+import { apiRequest, apiUpload, setCsrfToken } from '@/lib/api-client';
 
 export const authKeys = {
   all: ['auth'],
@@ -47,10 +47,10 @@ export const listSessions = () => apiRequest('/auth/sessions').then((r) => r.dat
 export const revokeSession = (id) => apiRequest(`/auth/sessions/${id}`, { method: 'DELETE' });
 export const revokeOtherSessions = () => apiRequest('/auth/sessions/revoke-others', { method: 'POST' });
 
-/** Uploads a profile photo (processed server-side into a 512×512 WebP). */
-export function uploadAvatar(file) {
+/** Uploads a profile photo (processed server-side into a 512×512 WebP); reports upload progress 0–100. */
+export function uploadAvatar(file, onProgress) {
   const form = new FormData();
   form.append('avatar', file);
-  return apiRequest('/users/me/avatar', { method: 'PUT', body: form });
+  return apiUpload('/users/me/avatar', form, { onProgress });
 }
 export const removeAvatar = () => apiRequest('/users/me/avatar', { method: 'DELETE' });

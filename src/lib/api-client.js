@@ -111,9 +111,14 @@ export function refreshSession() {
  *
  * Extra `init` options (e.g. `next: { tags }`, `cache`) pass straight to fetch.
  */
-export async function apiRequest(path, options = {}) {
+export function apiRequest(path, options = {}) {
+  return withRefresh(path, () => send(path, options));
+}
+
+/** Runs a request; on an expired session, refreshes once (shared across callers) and retries. */
+async function withRefresh(path, run) {
   try {
-    return await send(path, options);
+    return await run();
   } catch (error) {
     const canRefresh =
       typeof window !== 'undefined' &&
@@ -130,6 +135,47 @@ export async function apiRequest(path, options = {}) {
       expiredListeners.forEach((listener) => listener(refreshError));
       throw refreshError;
     }
-    return send(path, options);
+    return run();
   }
+}
+
+/** XHR transport for uploads: fetch can't report upload progress. Same envelope, CSRF and errors. */
+function sendWithProgress(path, { method, body, onProgress }) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open(method, buildUrl(path));
+    xhr.withCredentials = true;
+    xhr.setRequestHeader('Accept', 'application/json');
+    if (csrfToken) xhr.setRequestHeader('X-CSRF-Token', csrfToken);
+    xhr.upload.onprogress = (event) => {
+      if (event.lengthComputable) onProgress?.(Math.round((event.loaded / event.total) * 100));
+    };
+    xhr.onload = () => {
+      let payload = null;
+      try {
+        payload = xhr.responseText ? JSON.parse(xhr.responseText) : null;
+      } catch {
+        payload = null;
+      }
+      if (xhr.status < 200 || xhr.status >= 300 || payload?.success === false) {
+        reject(new ApiError(xhr.status, payload));
+      } else {
+        resolve({ data: payload?.data ?? null, message: payload?.message, meta: payload?.meta });
+      }
+    };
+    xhr.onerror = () =>
+      reject(new ApiError(0, { error: { code: 'NETWORK_ERROR', message: 'Unable to reach the server.' } }));
+    xhr.send(body);
+  });
+}
+
+/**
+ * Multipart upload with progress: `onProgress(percent)` fires as bytes leave the
+ * browser (0–100). Server-side processing happens after it reaches 100.
+ */
+export function apiUpload(path, formData, { method = 'PUT', onProgress } = {}) {
+  return withRefresh(path, () => {
+    onProgress?.(0);
+    return sendWithProgress(path, { method, body: formData, onProgress });
+  });
 }
