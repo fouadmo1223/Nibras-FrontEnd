@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { motion } from 'motion/react';
 import { usePathname } from 'next/navigation';
 import Logo from '@/components/ui/Logo';
 import { useSession } from '@/hooks/use-auth';
@@ -30,8 +31,8 @@ export default function SiteHeader() {
   return (
     <header
       className={cn(
-        'sticky top-0 z-40 border-b transition-[background-color,border-color,box-shadow] duration-200',
-        scrolled ? 'border-border bg-background/80 shadow-elevation-1 backdrop-blur-xl' : 'border-transparent',
+        'sticky top-0 z-40 transition-[background-color,box-shadow,padding] duration-300',
+        scrolled ? 'bg-background/80 shadow-elevation-1 backdrop-blur-xl' : 'bg-transparent',
       )}
     >
       <a
@@ -40,25 +41,34 @@ export default function SiteHeader() {
       >
         {t('common.skipToContent')}
       </a>
-      <div className="mx-auto flex h-16 max-w-6xl items-center gap-6 px-4 sm:px-6 lg:px-10">
+      <div className={cn('mx-auto flex max-w-6xl items-center gap-6 px-4 transition-[height] duration-300 sm:px-6 lg:px-10', scrolled ? 'h-14' : 'h-16')}>
         <Link href="/" aria-label={t('common.brandHome')} className="shrink-0 rounded-md">
           <Logo markClassName="size-7" wordClassName="text-xl" lang={locale} />
         </Link>
 
         <nav aria-label={t('nav.main')} className="hidden lg:block">
-          <ul className="flex items-center gap-1">
-            {NAV_ITEMS.map(({ key, href }) => {
+          <ul className="flex items-center gap-0.5 rounded-full border border-border/70 bg-surface/60 p-1 backdrop-blur-md">
+            {NAV_ITEMS.map(({ key, href, icon: Icon }) => {
               const active = isActivePath(current, href);
               return (
-                <li key={key}>
+                <li key={key} className="relative">
                   <Link
                     href={href}
                     aria-current={active ? 'page' : undefined}
                     className={cn(
-                      'inline-flex h-9 items-center rounded-full px-3.5 text-sm font-medium transition-colors',
-                      active ? 'bg-surface-muted text-foreground' : 'text-foreground-muted hover:text-foreground',
+                      'group relative inline-flex h-9 items-center gap-2 rounded-full px-4 text-sm font-medium transition-colors',
+                      active ? 'text-foreground' : 'text-foreground-muted hover:text-foreground',
                     )}
                   >
+                    {active && (
+                      // Shared-layout pill: glides between items when the route changes.
+                      <motion.span
+                        layoutId="site-nav-pill"
+                        transition={{ type: 'spring', stiffness: 420, damping: 34 }}
+                        className="absolute inset-0 -z-10 rounded-full bg-surface-muted shadow-elevation-1"
+                      />
+                    )}
+                    {Icon && <Icon className="size-4 text-primary transition-transform duration-200 group-hover:-rotate-6" aria-hidden="true" />}
                     {t(`nav.${key}`)}
                   </Link>
                 </li>

@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import { ArrowRight, GraduationCap, Sparkles } from 'lucide-react';
+import HeroIllustration from '@/components/sections/HeroIllustration';
 import HomeStats, { HomeStatsSkeleton } from '@/components/sections/HomeStats';
 import { getI18n } from '@/i18n/dictionaries';
 import { Link } from '@/i18n/navigation';
@@ -48,10 +49,13 @@ export default async function HomePage() {
           </div>
 
           <div className="relative animate-fade-up rounded-3xl border border-border bg-surface p-7 shadow-elevation-3 sm:p-9">
-            <span className="grid size-12 place-items-center rounded-2xl bg-primary-soft text-primary">
-              <GraduationCap className="size-6" aria-hidden="true" />
-            </span>
-            <h2 className="mt-5 text-lg font-semibold text-foreground">{t('home.hero.panelTitle')}</h2>
+            <HeroIllustration />
+            <div className="mt-2 flex items-center gap-3">
+              <span className="grid size-10 place-items-center rounded-xl bg-primary-soft text-primary">
+                <GraduationCap className="size-5" aria-hidden="true" />
+              </span>
+              <h2 className="text-lg font-semibold text-foreground">{t('home.hero.panelTitle')}</h2>
+            </div>
             <p className="mt-2 text-sm leading-6 text-foreground-muted">{t('home.hero.panelBody')}</p>
             <div className="mt-8 border-t border-border pt-8">
               <Suspense fallback={<HomeStatsSkeleton />}>
