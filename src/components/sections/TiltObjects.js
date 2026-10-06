@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from 'motion/react';
 import { Award, BookOpen, Compass, FlaskConical } from 'lucide-react';
 
@@ -60,10 +61,16 @@ function TiltCard({ item, index, interactive }) {
   );
 }
 
-/** Grid of tilt cards. `interactive` is decided on the client: fine pointers only, never under Reduce Motion. */
+/**
+ * Grid of tilt cards. Pointer capability is read after mount, never during render, so the
+ * server HTML and the first client render match (no hydration mismatch).
+ */
 export default function TiltObjects({ items }) {
   const reduce = useReducedMotion();
-  const fine = typeof window !== 'undefined' && window.matchMedia?.('(pointer: fine)').matches;
+  const [fine, setFine] = useState(false);
+  useEffect(() => {
+    setFine(window.matchMedia?.('(pointer: fine)').matches ?? false);
+  }, []);
   const interactive = !reduce && fine;
   return (
     <div className="grid auto-rows-fr items-stretch gap-6 md:grid-cols-2 lg:grid-cols-4">
