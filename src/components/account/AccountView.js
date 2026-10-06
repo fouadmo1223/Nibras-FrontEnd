@@ -127,12 +127,12 @@ export default function AccountView() {
               <p className="mt-1 break-all text-sm text-foreground-muted">{user.email}</p>
               <div className="mt-3 flex flex-wrap justify-center gap-1.5">
                 {user.roles.map((role) => (
-                  <span key={role} className="rounded-full bg-primary-soft px-2.5 py-0.5 text-xs font-medium text-primary">
+                  <span key={role} className="rounded-md bg-primary-soft px-2 py-0.5 text-xs font-medium text-primary">
                     {t(`account.roles.${role}`)}
                   </span>
                 ))}
                 <span
-                  className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium ${user.emailVerified ? 'bg-success-soft text-success' : 'bg-warning/15 text-warning'}`}
+                  className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-medium ${user.emailVerified ? 'bg-success-soft text-success' : 'bg-warning/15 text-warning'}`}
                 >
                   {user.emailVerified && <BadgeCheck className="size-3.5" aria-hidden="true" />}
                   {user.emailVerified ? t('account.verified') : t('account.unverified')}

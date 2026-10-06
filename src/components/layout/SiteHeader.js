@@ -47,7 +47,7 @@ export default function SiteHeader() {
         </Link>
 
         <nav aria-label={t('nav.main')} className="hidden lg:block">
-          <ul className="flex items-center gap-0.5 rounded-full border border-border/70 bg-surface/60 p-1 backdrop-blur-md">
+          <ul className="flex items-center gap-1 rounded-xl border border-border/70 bg-surface/50 p-1">
             {NAV_ITEMS.map(({ key, href, icon: Icon }) => {
               const active = isActivePath(current, href);
               return (
@@ -56,7 +56,7 @@ export default function SiteHeader() {
                     href={href}
                     aria-current={active ? 'page' : undefined}
                     className={cn(
-                      'group relative inline-flex h-9 items-center gap-2 rounded-full px-4 text-sm font-medium transition-colors',
+                      'group relative inline-flex h-9 items-center gap-2 rounded-lg px-4 text-sm font-medium transition-colors',
                       active ? 'text-foreground' : 'text-foreground-muted hover:text-foreground',
                     )}
                   >
@@ -65,7 +65,7 @@ export default function SiteHeader() {
                       <motion.span
                         layoutId="site-nav-pill"
                         transition={{ type: 'spring', stiffness: 420, damping: 34 }}
-                        className="absolute inset-0 -z-10 rounded-full bg-surface-muted shadow-elevation-1"
+                        className="absolute inset-0 -z-10 rounded-lg bg-surface-muted shadow-elevation-1"
                       />
                     )}
                     {Icon && <Icon className="size-4 text-primary transition-transform duration-200 group-hover:-rotate-6" aria-hidden="true" />}
@@ -90,12 +90,12 @@ export default function SiteHeader() {
             <UserMenu user={session.data.user} />
           ) : (
             <div className="hidden items-center gap-1.5 sm:flex">
-              <Link href="/login" className="inline-flex h-9 items-center rounded-full px-3.5 text-sm font-medium text-foreground-muted hover:text-foreground">
+              <Link href="/login" className="inline-flex h-9 items-center rounded-lg px-3.5 text-sm font-medium text-foreground-muted hover:text-foreground">
                 {t('nav.signIn')}
               </Link>
               <Link
                 href="/register"
-                className="inline-flex h-9 items-center rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground shadow-elevation-1 transition-colors hover:bg-primary-hover"
+                className="inline-flex h-9 items-center rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground shadow-elevation-1 transition-colors hover:bg-primary-hover"
               >
                 {t('nav.getStarted')}
               </Link>

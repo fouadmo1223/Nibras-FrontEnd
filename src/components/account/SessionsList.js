@@ -51,7 +51,7 @@ export default function SessionsList() {
                 <p className="flex flex-wrap items-center gap-2 text-sm font-medium text-foreground">
                   {device}
                   {s.current && (
-                    <span className="rounded-full bg-success-soft px-2 py-0.5 text-xs font-medium text-success">
+                    <span className="rounded-md bg-success-soft px-2 py-0.5 text-xs font-medium text-success">
                       {t('sessions.thisDevice')}
                     </span>
                   )}

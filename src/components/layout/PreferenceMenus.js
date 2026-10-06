@@ -67,7 +67,7 @@ function Segmented({ label, options, value, onChange, className }) {
     event.currentTarget.querySelector(`[data-id="${next.id}"]`)?.focus();
   };
   return (
-    <div role="radiogroup" aria-label={label} onKeyDown={onKeyDown} className={cn('inline-flex rounded-full border border-border bg-surface-muted p-1', className)}>
+    <div role="radiogroup" aria-label={label} onKeyDown={onKeyDown} className={cn('inline-flex rounded-lg border border-border bg-surface-muted p-1', className)}>
       {options.map((option) => {
         const Icon = option.icon;
         const checked = option.id === value;
@@ -82,7 +82,7 @@ function Segmented({ label, options, value, onChange, className }) {
             lang={option.lang}
             onClick={() => onChange(option.id)}
             className={cn(
-              'inline-flex h-8 items-center gap-1.5 rounded-full px-3 text-sm font-medium transition-colors',
+              'inline-flex h-8 items-center gap-1.5 rounded-md px-3 text-sm font-medium transition-colors',
               checked ? 'bg-surface text-foreground shadow-elevation-1' : 'text-foreground-muted hover:text-foreground',
             )}
           >

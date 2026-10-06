@@ -19,7 +19,7 @@ export default async function NotFound() {
         <p className="mt-3 text-foreground-muted">{t('notFound.body')}</p>
         <Link
           href="/"
-          className="mt-8 inline-flex h-11 items-center rounded-full bg-primary px-5 font-medium text-primary-foreground hover:bg-primary-hover"
+          className="mt-8 inline-flex h-11 items-center rounded-lg bg-primary px-5 font-medium text-primary-foreground hover:bg-primary-hover"
         >
           {t('notFound.home')}
         </Link>

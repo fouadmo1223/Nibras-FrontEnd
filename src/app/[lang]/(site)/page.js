@@ -23,7 +23,7 @@ export default async function HomePage() {
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(70%_60%_at_20%_0%,color-mix(in_oklab,var(--primary)_16%,transparent),transparent_70%),radial-gradient(50%_50%_at_90%_10%,color-mix(in_oklab,var(--secondary)_14%,transparent),transparent_70%)]" />
         <div className="mx-auto grid w-full max-w-6xl gap-12 px-4 pb-20 pt-16 sm:px-6 lg:grid-cols-[1.1fr_1fr] lg:items-center lg:px-10 lg:pt-24">
           <div className="animate-fade-up">
-            <p className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-3 py-1 text-xs font-medium text-foreground-muted">
+            <p className="inline-flex items-center gap-2 rounded-md border border-border bg-surface px-2.5 py-1 text-xs font-medium text-foreground-muted">
               <Sparkles className="size-3.5 text-secondary" aria-hidden="true" />
               {t('home.hero.eyebrow')}
             </p>
@@ -34,14 +34,14 @@ export default async function HomePage() {
             <div className="mt-9 flex flex-wrap items-center gap-3">
               <Link
                 href="/register"
-                className="inline-flex h-12 items-center gap-2 rounded-full bg-primary px-6 font-medium text-primary-foreground shadow-elevation-2 transition-colors hover:bg-primary-hover"
+                className="inline-flex h-12 items-center gap-2 rounded-lg bg-primary px-6 font-medium text-primary-foreground shadow-elevation-2 transition-colors hover:bg-primary-hover"
               >
                 {t('home.hero.primaryCta')}
                 <ArrowRight className="size-4 rtl:-scale-x-100" aria-hidden="true" />
               </Link>
               <Link
                 href="/login"
-                className="inline-flex h-12 items-center rounded-full border border-border-strong px-6 font-medium text-foreground transition-colors hover:bg-surface-muted"
+                className="inline-flex h-12 items-center rounded-lg border border-border-strong px-6 font-medium text-foreground transition-colors hover:bg-surface-muted"
               >
                 {t('home.hero.secondaryCta')}
               </Link>
