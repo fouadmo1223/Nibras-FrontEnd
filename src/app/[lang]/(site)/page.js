@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import { ArrowRight, GraduationCap, Sparkles } from 'lucide-react';
 import HeroIllustration from '@/components/sections/HeroIllustration';
+import Journey from '@/components/sections/Journey';
 import HomeStats, { HomeStatsSkeleton } from '@/components/sections/HomeStats';
 import { getI18n } from '@/i18n/dictionaries';
 import { Link } from '@/i18n/navigation';
@@ -84,11 +85,55 @@ export default async function HomePage() {
         <EmptyState title={t('home.sections.categories.emptyTitle')} body={t('home.sections.categories.emptyBody')} />
       </section>
 
-      <section aria-labelledby="courses-heading" className="mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6 lg:px-10">
+      <section aria-labelledby="courses-heading" className="mx-auto w-full max-w-6xl px-4 pb-24 sm:px-6 lg:px-10">
         <h2 id="courses-heading" className="font-display text-3xl tracking-tight text-foreground">
           {t('home.sections.courses.title')}
         </h2>
         <EmptyState title={t('home.sections.courses.emptyTitle')} body={t('home.sections.courses.emptyBody')} />
+      </section>
+
+      <Journey
+        title={t('home.journey.title')}
+        subtitle={t('home.journey.subtitle')}
+        steps={[0, 1, 2].map((i) => ({ title: t(`home.journey.steps.${i}.title`), body: t(`home.journey.steps.${i}.body`) }))}
+      />
+
+      <section aria-labelledby="instructors-heading" className="mx-auto w-full max-w-6xl px-4 pb-24 sm:px-6 lg:px-10">
+        <h2 id="instructors-heading" className="font-display text-3xl tracking-tight text-foreground">
+          {t('home.sections.instructors.title')}
+        </h2>
+        <EmptyState title={t('home.sections.instructors.emptyTitle')} body={t('home.sections.instructors.emptyBody')} />
+      </section>
+
+      <section aria-labelledby="testimonials-heading" className="mx-auto w-full max-w-6xl px-4 pb-24 sm:px-6 lg:px-10">
+        <h2 id="testimonials-heading" className="font-display text-3xl tracking-tight text-foreground">
+          {t('home.sections.testimonials.title')}
+        </h2>
+        <EmptyState title={t('home.sections.testimonials.emptyTitle')} body={t('home.sections.testimonials.emptyBody')} />
+      </section>
+
+      <section aria-labelledby="pricing-heading" className="mx-auto w-full max-w-6xl px-4 pb-24 sm:px-6 lg:px-10">
+        <h2 id="pricing-heading" className="font-display text-3xl tracking-tight text-foreground">
+          {t('home.sections.pricing.title')}
+        </h2>
+        <EmptyState title={t('home.sections.pricing.emptyTitle')} body={t('home.sections.pricing.emptyBody')} />
+      </section>
+
+      <section aria-labelledby="cta-heading" className="mx-auto w-full max-w-6xl px-4 pb-28 sm:px-6 lg:px-10">
+        <div className="relative isolate overflow-hidden rounded-3xl border border-border bg-surface px-6 py-16 text-center shadow-elevation-3 sm:px-12">
+          <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(60%_80%_at_50%_0%,color-mix(in_oklab,var(--primary)_22%,transparent),transparent_70%)]" />
+          <h2 id="cta-heading" className="font-display text-4xl tracking-tight text-foreground sm:text-5xl">
+            {t('home.cta.title')}
+          </h2>
+          <p className="mx-auto mt-4 max-w-xl text-lg text-foreground-muted">{t('home.cta.body')}</p>
+          <Link
+            href="/register"
+            className="mt-9 inline-flex h-12 items-center gap-2 rounded-lg bg-primary px-7 font-medium text-primary-foreground shadow-elevation-2 transition-colors hover:bg-primary-hover"
+          >
+            {t('home.cta.button')}
+            <ArrowRight className="size-4 rtl:-scale-x-100" aria-hidden="true" />
+          </Link>
+        </div>
       </section>
     </div>
   );

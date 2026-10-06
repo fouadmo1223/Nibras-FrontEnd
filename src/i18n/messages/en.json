@@ -89,7 +89,45 @@
         "title": "Featured courses",
         "emptyTitle": "Courses are being prepared",
         "emptyBody": "Our first courses will be listed here. Create an account to be notified when they open."
+      },
+      "instructors": {
+        "title": "Taught by instructors",
+        "emptyTitle": "Instructor profiles are coming",
+        "emptyBody": "Our instructors will introduce themselves here once their first course is ready."
+      },
+      "testimonials": {
+        "title": "What learners say",
+        "emptyTitle": "No reviews yet",
+        "emptyBody": "Reviews from learners appear here after they complete a course. We only show real feedback."
+      },
+      "pricing": {
+        "title": "Simple plans",
+        "emptyTitle": "Plans are being finalised",
+        "emptyBody": "Subscription plans will be published here before we open enrolment."
       }
+    },
+    "journey": {
+      "title": "From first click to first certificate",
+      "subtitle": "Three steps, paced by you. Nothing is locked behind a paywall you didn’t choose.",
+      "steps": [
+        {
+          "title": "Choose a path",
+          "body": "Pick a course or a learning path that matches your goal and your level."
+        },
+        {
+          "title": "Learn at your pace",
+          "body": "Short lessons, practice and quizzes. Your progress is saved on every device."
+        },
+        {
+          "title": "Earn your certificate",
+          "body": "Finish the course and receive a certificate you can verify and share."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Start your first lesson today",
+      "body": "Create a free account and see how Nibras fits into your week.",
+      "button": "Create your account"
     }
   },
   "apiStatus": {
