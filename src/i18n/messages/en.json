@@ -63,6 +63,33 @@
       "warning": "Warning",
       "error": "Error",
       "surface": "Surface"
+    },
+    "hero": {
+      "eyebrow": "Courses, learning paths and certificates",
+      "titleStart": "Learn with",
+      "titleEmphasis": "clarity",
+      "titleEnd": "at your own pace.",
+      "body": "Structured courses taught by real instructors, with progress you can follow and certificates you can share.",
+      "primaryCta": "Start learning free",
+      "secondaryCta": "I already have an account",
+      "panelTitle": "Nibras by the numbers",
+      "panelBody": "Live counts from our platform. They grow as people join."
+    },
+    "stats": {
+      "learners": "Learners",
+      "instructors": "Instructors"
+    },
+    "sections": {
+      "categories": {
+        "title": "Browse by category",
+        "emptyTitle": "Categories are on their way",
+        "emptyBody": "Course categories appear here as soon as they are published."
+      },
+      "courses": {
+        "title": "Featured courses",
+        "emptyTitle": "Courses are being prepared",
+        "emptyBody": "Our first courses will be listed here. Create an account to be notified when they open."
+      }
     }
   },
   "apiStatus": {
