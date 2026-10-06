@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import { ArrowRight, GraduationCap, Sparkles } from 'lucide-react';
+import CategoryGrid from '@/components/sections/CategoryGrid';
 import HeroIllustration from '@/components/sections/HeroIllustration';
 import Journey from '@/components/sections/Journey';
 import TiltObjects from '@/components/sections/TiltObjects';
@@ -93,7 +94,9 @@ export default async function HomePage() {
         <h2 id="categories-heading" className="font-display text-3xl tracking-tight text-foreground">
           {t('home.sections.categories.title')}
         </h2>
-        <EmptyState title={t('home.sections.categories.emptyTitle')} body={t('home.sections.categories.emptyBody')} />
+        <Suspense fallback={<div className="mt-8 h-32 animate-pulse rounded-2xl bg-surface-muted" aria-hidden="true" />}>
+          <CategoryGrid emptyTitle={t('home.sections.categories.emptyTitle')} emptyBody={t('home.sections.categories.emptyBody')} />
+        </Suspense>
       </section>
 
       <section aria-labelledby="courses-heading" className="mx-auto w-full max-w-6xl px-4 pb-24 sm:px-6 lg:px-10">

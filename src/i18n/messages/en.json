@@ -83,7 +83,8 @@
       "categories": {
         "title": "Browse by category",
         "emptyTitle": "Categories are on their way",
-        "emptyBody": "Course categories appear here as soon as they are published."
+        "emptyBody": "Course categories appear here as soon as they are published.",
+        "browse": "Browse"
       },
       "courses": {
         "title": "Featured courses",
