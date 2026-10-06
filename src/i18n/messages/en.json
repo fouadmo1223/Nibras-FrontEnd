@@ -128,6 +128,31 @@
       "title": "Start your first lesson today",
       "body": "Create a free account and see how Nibras fits into your week.",
       "button": "Create your account"
+    },
+    "tilt": {
+      "title": "Learn the way you think",
+      "items": [
+        {
+          "icon": "book",
+          "title": "Structured courses",
+          "body": "Lessons in order, so each step builds on the last."
+        },
+        {
+          "icon": "compass",
+          "title": "Guided paths",
+          "body": "Curated routes that take you from beginner to confident."
+        },
+        {
+          "icon": "flask",
+          "title": "Practice that sticks",
+          "body": "Quizzes and exercises after every section, not just at the end."
+        },
+        {
+          "icon": "award",
+          "title": "Verified certificates",
+          "body": "Certificates anyone can check, linked to your real progress."
+        }
+      ]
     }
   },
   "apiStatus": {

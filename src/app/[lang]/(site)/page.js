@@ -2,10 +2,13 @@ import { Suspense } from 'react';
 import { ArrowRight, GraduationCap, Sparkles } from 'lucide-react';
 import HeroIllustration from '@/components/sections/HeroIllustration';
 import Journey from '@/components/sections/Journey';
+import TiltObjects from '@/components/sections/TiltObjects';
 import HomeStats, { HomeStatsSkeleton } from '@/components/sections/HomeStats';
 import { getI18n } from '@/i18n/dictionaries';
 import { Link } from '@/i18n/navigation';
 import { languageAlternates } from '@/i18n/seo';
+
+const TILT_ICONS = ['book', 'compass', 'flask', 'award'];
 
 export async function generateMetadata() {
   const { locale } = await getI18n();
@@ -75,6 +78,15 @@ export default async function HomePage() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="tilt-heading" className="mx-auto w-full max-w-6xl px-4 py-24 sm:px-6 lg:px-10">
+        <h2 id="tilt-heading" className="font-display text-4xl tracking-tight text-foreground sm:text-5xl">
+          {t('home.tilt.title')}
+        </h2>
+        <div className="mt-12">
+          <TiltObjects items={[0, 1, 2, 3].map((i) => ({ icon: TILT_ICONS[i], title: t(`home.tilt.items.${i}.title`), body: t(`home.tilt.items.${i}.body`) }))} />
         </div>
       </section>
 
