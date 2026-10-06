@@ -24,6 +24,7 @@ function TiltCard({ item, index, interactive }) {
       viewport={{ once: true, margin: '-60px' }}
       transition={{ duration: 0.6, delay: index * 0.1, ease: [0.2, 0, 0, 1] }}
       style={{ perspective: 900 }}
+      className="h-full"
       onPointerMove={
         interactive
           ? (e) => {
@@ -40,7 +41,7 @@ function TiltCard({ item, index, interactive }) {
     >
       <motion.article
         style={interactive ? { rotateX: rx, rotateY: ry, transformStyle: 'preserve-3d' } : undefined}
-        className="relative rounded-2xl border border-border bg-surface p-7 shadow-elevation-2 transition-shadow duration-300 hover:shadow-elevation-3"
+        className="relative flex h-full flex-col rounded-2xl border border-border bg-surface p-7 shadow-elevation-2 transition-shadow duration-300 hover:shadow-elevation-3"
       >
         <span
           className="grid size-14 place-items-center rounded-2xl bg-primary-soft text-primary shadow-elevation-2"
@@ -51,7 +52,7 @@ function TiltCard({ item, index, interactive }) {
         <h3 className="mt-6 text-lg font-semibold text-foreground" style={interactive ? { transform: 'translateZ(30px)' } : undefined}>
           {item.title}
         </h3>
-        <p className="mt-2 text-sm leading-6 text-foreground-muted" style={interactive ? { transform: 'translateZ(20px)' } : undefined}>
+        <p className="mt-2 flex-1 text-sm leading-6 text-foreground-muted" style={interactive ? { transform: 'translateZ(20px)' } : undefined}>
           {item.body}
         </p>
       </motion.article>
@@ -65,7 +66,7 @@ export default function TiltObjects({ items }) {
   const fine = typeof window !== 'undefined' && window.matchMedia?.('(pointer: fine)').matches;
   const interactive = !reduce && fine;
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+    <div className="grid auto-rows-fr items-stretch gap-6 md:grid-cols-2 lg:grid-cols-4">
       {items.map((item, i) => (
         <TiltCard key={item.icon} item={item} index={i} interactive={interactive} />
       ))}
