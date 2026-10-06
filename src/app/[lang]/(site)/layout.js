@@ -6,7 +6,7 @@ export default function SiteLayout({ children }) {
   return (
     <>
       <SiteHeader />
-      <main id="main" tabIndex={-1} className="flex flex-1 flex-col outline-none">
+      <main id="main" tabIndex={-1} className="flex flex-1 flex-col pt-24 outline-none">
         {children}
       </main>
       <SiteFooter />

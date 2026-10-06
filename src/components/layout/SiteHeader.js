@@ -29,7 +29,7 @@ export default function SiteHeader() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-40 px-3 pt-3 sm:px-5">
+    <header className="fixed inset-x-0 top-0 z-40 px-3 pt-3 sm:px-5">
       <a
         href="#main"
         className="absolute start-4 top-2 z-50 -translate-y-16 rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground transition-transform focus:translate-y-0"

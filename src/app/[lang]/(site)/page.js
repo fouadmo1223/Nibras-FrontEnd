@@ -19,15 +19,22 @@ export default async function HomePage() {
   const { t } = await getI18n();
   return (
     <div className="flex flex-1 flex-col">
-      <section className="relative isolate overflow-hidden">
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(70%_60%_at_20%_0%,color-mix(in_oklab,var(--primary)_16%,transparent),transparent_70%),radial-gradient(50%_50%_at_90%_10%,color-mix(in_oklab,var(--secondary)_14%,transparent),transparent_70%)]" />
-        <div className="mx-auto grid w-full max-w-6xl gap-12 px-4 pb-20 pt-16 sm:px-6 lg:grid-cols-[1.1fr_1fr] lg:items-center lg:px-10 lg:pt-24">
+      <section className="relative isolate -mt-24 flex min-h-dvh items-center overflow-hidden pb-16 pt-28">
+        {/* Full-bleed cinematic backdrop: glows, a fine grid and a vignette, edge to edge. */}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
+          <div className="absolute -left-40 top-1/4 size-[60rem] rounded-full bg-[radial-gradient(closest-side,color-mix(in_oklab,var(--primary)_28%,transparent),transparent)] blur-2xl" />
+          <div className="absolute -right-40 -top-40 size-[55rem] rounded-full bg-[radial-gradient(closest-side,color-mix(in_oklab,var(--secondary)_22%,transparent),transparent)] blur-2xl" />
+          <div className="absolute inset-0 opacity-[0.07] [background-image:linear-gradient(var(--foreground)_1px,transparent_1px),linear-gradient(90deg,var(--foreground)_1px,transparent_1px)] [background-size:56px_56px] [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_72%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,var(--background)_100%)]" />
+        </div>
+
+        <div className="mx-auto grid w-full max-w-7xl gap-14 px-4 sm:px-6 lg:grid-cols-[1fr_1.05fr] lg:items-center lg:gap-10 lg:px-10">
           <div className="animate-fade-up">
             <p className="inline-flex items-center gap-2 rounded-md border border-border bg-surface px-2.5 py-1 text-xs font-medium text-foreground-muted">
               <Sparkles className="size-3.5 text-secondary" aria-hidden="true" />
               {t('home.hero.eyebrow')}
             </p>
-            <h1 className="mt-6 font-display text-5xl leading-[1.05] tracking-tight text-foreground sm:text-6xl">
+            <h1 className="mt-6 font-display text-5xl leading-[1.04] tracking-tight text-foreground sm:text-6xl lg:text-7xl">
               {t('home.hero.titleStart')} <em className="text-primary">{t('home.hero.titleEmphasis')}</em> {t('home.hero.titleEnd')}
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-8 text-foreground-muted">{t('home.hero.body')}</p>
@@ -48,19 +55,23 @@ export default async function HomePage() {
             </div>
           </div>
 
-          <div className="relative animate-fade-up rounded-3xl border border-border bg-surface p-7 shadow-elevation-3 sm:p-9">
-            <HeroIllustration />
-            <div className="mt-2 flex items-center gap-3">
-              <span className="grid size-10 place-items-center rounded-xl bg-primary-soft text-primary">
-                <GraduationCap className="size-5" aria-hidden="true" />
-              </span>
-              <h2 className="text-lg font-semibold text-foreground">{t('home.hero.panelTitle')}</h2>
-            </div>
-            <p className="mt-2 text-sm leading-6 text-foreground-muted">{t('home.hero.panelBody')}</p>
-            <div className="mt-8 border-t border-border pt-8">
-              <Suspense fallback={<HomeStatsSkeleton />}>
-                <HomeStats />
-              </Suspense>
+          <div className="relative animate-fade-up">
+            {/* Glowing halo behind the illustration. */}
+            <div aria-hidden="true" className="absolute inset-0 -z-10 m-auto size-[min(34rem,100%)] rounded-full bg-[radial-gradient(closest-side,color-mix(in_oklab,var(--primary)_30%,transparent),transparent_72%)] blur-3xl" />
+            <div className="glass rounded-3xl border p-6 shadow-elevation-3 sm:p-9">
+              <HeroIllustration />
+              <div className="mt-2 flex items-center gap-3">
+                <span className="grid size-10 place-items-center rounded-xl bg-primary-soft text-primary">
+                  <GraduationCap className="size-5" aria-hidden="true" />
+                </span>
+                <h2 className="text-lg font-semibold text-foreground">{t('home.hero.panelTitle')}</h2>
+              </div>
+              <p className="mt-2 text-sm leading-6 text-foreground-muted">{t('home.hero.panelBody')}</p>
+              <div className="mt-7 border-t border-border pt-7">
+                <Suspense fallback={<HomeStatsSkeleton />}>
+                  <HomeStats />
+                </Suspense>
+              </div>
             </div>
           </div>
         </div>
