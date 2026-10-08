@@ -33,7 +33,7 @@ function Lamp({ still }) {
   return (
     <div className="relative grid size-56 place-items-center">
       <motion.div
-        className="absolute inset-0 rounded-full bg-[radial-gradient(circle,rgb(254_90_31/0.45),transparent_65%)] blur-2xl"
+        className="absolute inset-0 rounded-full bg-[radial-gradient(circle,rgb(245_158_11/0.45),transparent_65%)] blur-2xl"
         animate={still ? undefined : { scale: [1, 1.12, 1], opacity: [0.7, 1, 0.7] }}
         transition={{ duration: 3.2, repeat: Infinity, ease }}
       />
@@ -41,7 +41,7 @@ function Lamp({ still }) {
         sparks.map((i) => (
           <motion.span
             key={i}
-            className="absolute size-1.5 rounded-full bg-ember-300"
+            className="absolute size-1.5 rounded-full bg-amber-300"
             style={{ left: '50%', top: '30%' }}
             initial={{ opacity: 0 }}
             animate={{ y: [0, -110 - (i % 4) * 22], x: [0, ((i % 5) - 2) * 14], opacity: [0, 1, 0], scale: [1, 0.4] }}
@@ -85,12 +85,12 @@ function ShowcaseScene({ animate }) {
     <div className="absolute inset-0" onPointerMove={onPointerMove} onPointerLeave={() => (pointerX.set(0), pointerY.set(0))}>
       {/* Drifting light. */}
       <motion.div
-        className="absolute -top-24 -right-24 size-[28rem] rounded-full bg-ember-500/25 blur-3xl"
+        className="absolute -top-24 -right-24 size-[28rem] rounded-full bg-amber-500/25 blur-3xl"
         animate={still ? undefined : { x: [0, -40, 10, 0], y: [0, 30, -20, 0] }}
         transition={{ duration: 18, repeat: Infinity, ease }}
       />
       <motion.div
-        className="absolute -bottom-32 -left-24 size-[32rem] rounded-full bg-cobalt-500/35 blur-3xl"
+        className="absolute -bottom-32 -left-24 size-[32rem] rounded-full bg-white/10 blur-3xl"
         animate={still ? undefined : { x: [0, 50, -10, 0], y: [0, -30, 20, 0] }}
         transition={{ duration: 22, repeat: Infinity, ease }}
       />
@@ -103,7 +103,7 @@ function ShowcaseScene({ animate }) {
       {/* Course progress */}
       <FloatCard className="left-[8%] top-[12%] w-60" depth={-26} delay={0.15} {...shared}>
         <div className="flex items-center gap-3">
-          <span className="grid size-9 place-items-center rounded-lg bg-cobalt-500/30">
+          <span className="grid size-9 place-items-center rounded-lg bg-white/15">
             <BookOpen className="size-4" aria-hidden="true" />
           </span>
           <div className="min-w-0">
@@ -113,7 +113,7 @@ function ShowcaseScene({ animate }) {
         </div>
         <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/15">
           <motion.div
-            className="h-full rounded-full bg-gradient-to-r from-cobalt-400 to-ember-400"
+            className="h-full rounded-full bg-gradient-to-r from-white/70 to-amber-400"
             initial={false}
             animate={{ width: '67%' }}
           />
@@ -122,7 +122,7 @@ function ShowcaseScene({ animate }) {
 
       {/* Video lesson */}
       <FloatCard className="right-[8%] top-[18%] w-56" depth={34} delay={0.35} {...shared}>
-        <div className="relative grid h-24 place-items-center overflow-hidden rounded-lg bg-[linear-gradient(135deg,rgb(74_92_251/0.7),rgb(254_90_31/0.55))]">
+        <div className="relative grid h-24 place-items-center overflow-hidden rounded-lg bg-[linear-gradient(135deg,rgb(38_38_36/0.75),rgb(245_158_11/0.5))]">
           {!still && (
             <motion.span
               className="absolute size-12 rounded-full border border-white/50"
@@ -130,7 +130,7 @@ function ShowcaseScene({ animate }) {
               transition={{ duration: 1.8, repeat: Infinity, ease: 'easeOut' }}
             />
           )}
-          <span className="grid size-10 place-items-center rounded-full bg-white text-cobalt-700">
+          <span className="grid size-10 place-items-center rounded-full bg-white text-amber-600">
             <Play className="ms-0.5 size-4 fill-current" aria-hidden="true" />
           </span>
         </div>
@@ -156,7 +156,7 @@ function ShowcaseScene({ animate }) {
               animate={still ? undefined : { scale: [1, 1.25, 1] }}
               transition={{ duration: 0.5, delay: 1 + i * 0.12, repeat: Infinity, repeatDelay: 5 }}
             >
-              <Star className="size-4 fill-ember-400 text-ember-400" aria-hidden="true" />
+              <Star className="size-4 fill-amber-400 text-amber-400" aria-hidden="true" />
             </motion.span>
           ))}
         </div>
@@ -165,7 +165,7 @@ function ShowcaseScene({ animate }) {
       {/* Certificate */}
       <FloatCard className="left-[10%] bottom-[14%] w-56" depth={-18} delay={0.75} {...shared}>
         <div className="flex items-center gap-3">
-          <span className="grid size-10 place-items-center rounded-full bg-ember-500/25 text-ember-300">
+          <span className="grid size-10 place-items-center rounded-full bg-amber-500/25 text-amber-300">
             <Award className="size-5" aria-hidden="true" />
           </span>
           <div>
@@ -197,7 +197,7 @@ export default function AuthShowcase() {
   const other = locale === 'ar' ? 'en' : 'ar';
 
   return (
-    <aside aria-hidden="true" className="relative flex h-full flex-col overflow-hidden bg-cobalt-950 text-white">
+    <aside aria-hidden="true" className="relative flex h-full flex-col overflow-hidden bg-ink-950 text-white">
       {/* Scene and copy stack, so floating cards never overlap the headline at short heights. */}
       <div className="relative min-h-0 flex-1">
         <ShowcaseScene animate={desktop} />
