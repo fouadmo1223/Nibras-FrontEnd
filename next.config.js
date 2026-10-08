@@ -17,6 +17,9 @@ const nextConfig = {
   poweredByHeader: false,
   images: {
     formats: ['image/avif', 'image/webp'],
+    // Unsplash: temporary stock imagery (hero, section visuals) until real platform content
+    // (courses, instructor/student photos) exists or the admin replaces it via the dashboard.
+    remotePatterns: [{ protocol: 'https', hostname: 'images.unsplash.com' }],
   },
   async headers() {
     return [{ source: '/:path*', headers: securityHeaders }];

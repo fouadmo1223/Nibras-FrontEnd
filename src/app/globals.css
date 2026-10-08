@@ -84,6 +84,17 @@ html[dir="rtl"] * {
   --animate-dialog-in: dialog-in 0.22s cubic-bezier(0.2, 0, 0, 1) both;
   --animate-sheet-in: sheet-in 0.32s cubic-bezier(0.3, 0, 0, 1) both;
   --animate-sheet-in-rtl: sheet-in-rtl 0.32s cubic-bezier(0.3, 0, 0, 1) both;
+  --animate-float-slow: float 5.5s ease-in-out infinite;
+  --animate-float-slower: float 7s ease-in-out 0.8s infinite;
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
   @keyframes sheet-in {
     from {
       transform: translateX(100%);

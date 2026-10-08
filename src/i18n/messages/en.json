@@ -75,7 +75,9 @@
       "primaryCta": "Start learning free",
       "secondaryCta": "I already have an account",
       "panelTitle": "Nibras by the numbers",
-      "panelBody": "Live counts from our platform. They grow as people join."
+      "panelBody": "Live counts from our platform. They grow as people join.",
+      "floatCertificate": "Verified certificate",
+      "floatProgress": "Track every lesson"
     },
     "stats": {
       "learners": "Learners",

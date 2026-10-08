@@ -3,13 +3,16 @@ import SiteFooter from '@/components/layout/SiteFooter';
 import SiteHeader from '@/components/layout/SiteHeader';
 
 /**
- * Pages with the site chrome: a fixed, faint grid across the whole background, the floating
- * header, content, and the footer. The grid is decorative and sits behind everything.
+ * Pages with the site chrome: a fixed, faint dot grid across the whole background, the
+ * floating header, content, and the footer. The grid is decorative and sits behind everything.
  */
 export default function SiteLayout({ children }) {
   return (
     <>
-      <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10 opacity-[0.06] [background-image:linear-gradient(var(--foreground)_1px,transparent_1px),linear-gradient(90deg,var(--foreground)_1px,transparent_1px)] [background-size:56px_56px] [mask-image:radial-gradient(ellipse_at_top,black_20%,transparent_80%)]" />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none fixed inset-0 -z-10 opacity-[0.1] [background-image:radial-gradient(color-mix(in_oklab,var(--foreground)_70%,transparent)_1px,transparent_1px)] [background-size:28px_28px] [mask-image:radial-gradient(ellipse_at_top,black_15%,transparent_75%)]"
+      />
       {/* SiteHeader reads usePathname; wrapped so routes with dynamic, unlisted params (e.g.
           /instructors/[id] before it's prerendered) can still build a static shell around it. */}
       <Suspense fallback={null}>

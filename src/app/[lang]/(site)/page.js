@@ -1,13 +1,14 @@
 import { Suspense } from 'react';
-import { ArrowRight, BookOpen, GraduationCap, MessageCircleHeart, Sparkles, Tags } from 'lucide-react';
+import Image from 'next/image';
+import { ArrowRight, Award, BookOpen, GraduationCap, MessageCircleHeart, Sparkles, Tags, TrendingUp } from 'lucide-react';
 import CategoryGrid from '@/components/sections/CategoryGrid';
 import GsapReveal from '@/components/motion/GsapReveal';
-import HeroIllustration from '@/components/sections/HeroIllustration';
 import InstructorGrid from '@/components/sections/InstructorGrid';
 import Journey from '@/components/sections/Journey';
 import OrbitAccent from '@/components/sections/OrbitAccent';
 import TiltObjects from '@/components/sections/TiltObjects';
 import HomeStats, { HomeStatsSkeleton } from '@/components/sections/HomeStats';
+import { STOCK_IMAGES, unsplashUrl } from '@/constants/stock-images';
 import { getI18n } from '@/i18n/dictionaries';
 import { Link } from '@/i18n/navigation';
 import { languageAlternates } from '@/i18n/seo';
@@ -24,7 +25,7 @@ export async function generateMetadata() {
  * sections that need courses and categories. Those sections fill in as their modules ship.
  */
 export default async function HomePage() {
-  const { t } = await getI18n();
+  const { t, locale } = await getI18n();
   return (
     <div className="flex flex-1 flex-col">
       <section className="relative isolate -mt-24 flex min-h-dvh items-center overflow-hidden pb-16 pt-28">
@@ -63,21 +64,59 @@ export default async function HomePage() {
           </div>
 
           <div className="relative animate-fade-up">
-            {/* Glowing halo behind the illustration. */}
+            {/* Glowing halo behind the photo. */}
             <div aria-hidden="true" className="absolute inset-0 -z-10 m-auto size-[min(34rem,100%)] rounded-full bg-[radial-gradient(closest-side,color-mix(in_oklab,var(--primary)_30%,transparent),transparent_72%)] blur-3xl" />
-            <div className="glass rounded-3xl border p-6 shadow-elevation-3 sm:p-9">
-              <HeroIllustration />
-              <div className="mt-2 flex items-center gap-3">
+            <div className="glass overflow-hidden rounded-3xl border p-2.5 shadow-elevation-3">
+              <div className="relative aspect-[6/5] overflow-hidden rounded-2xl">
+                <Image
+                  src={unsplashUrl(STOCK_IMAGES.heroLearner.src, { w: 900, h: 750 })}
+                  alt={STOCK_IMAGES.heroLearner.alt[locale]}
+                  fill
+                  priority
+                  sizes="(min-width: 1024px) 560px, 90vw"
+                  className="object-cover"
+                />
+                {/* Duotone brand wash so stock photography reads as "Nibras", not generic stock. */}
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-0 bg-[linear-gradient(160deg,color-mix(in_oklab,var(--background)_55%,transparent)_0%,transparent_45%,color-mix(in_oklab,var(--secondary)_28%,transparent)_100%)]"
+                />
+              </div>
+              <div className="flex items-center gap-3 px-3.5 pb-1 pt-4">
                 <span className="grid size-10 place-items-center rounded-xl bg-primary-soft text-primary">
                   <GraduationCap className="size-5" aria-hidden="true" />
                 </span>
                 <h2 className="text-lg font-semibold text-foreground">{t('home.hero.panelTitle')}</h2>
               </div>
-              <p className="mt-2 text-sm leading-6 text-foreground-muted">{t('home.hero.panelBody')}</p>
-              <div className="mt-7 border-t border-border pt-7">
+              <p className="px-3.5 pt-2 text-sm leading-6 text-foreground-muted">{t('home.hero.panelBody')}</p>
+              <div className="mt-5 border-t border-border px-3.5 pb-3.5 pt-5">
                 <Suspense fallback={<HomeStatsSkeleton />}>
                   <HomeStats />
                 </Suspense>
+              </div>
+            </div>
+
+            {/* Floating UI chrome: decorative, illustrative only — no fabricated names/ratings. */}
+            <div
+              aria-hidden="true"
+              className="glass motion-safe:animate-float-slow absolute -start-6 top-10 hidden w-48 rounded-2xl border p-3.5 shadow-elevation-3 sm:block lg:-start-10"
+            >
+              <div className="flex items-center gap-2.5">
+                <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-secondary-soft text-secondary">
+                  <Award className="size-4" aria-hidden="true" />
+                </span>
+                <p className="text-xs font-medium leading-4 text-foreground">{t('home.hero.floatCertificate')}</p>
+              </div>
+            </div>
+            <div
+              aria-hidden="true"
+              className="glass motion-safe:animate-float-slower absolute -end-4 bottom-16 hidden w-44 rounded-2xl border p-3.5 shadow-elevation-3 sm:block lg:-end-8"
+            >
+              <div className="flex items-center gap-2.5">
+                <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-primary-soft text-primary">
+                  <TrendingUp className="size-4" aria-hidden="true" />
+                </span>
+                <p className="text-xs font-medium leading-4 text-foreground">{t('home.hero.floatProgress')}</p>
               </div>
             </div>
           </div>
@@ -85,9 +124,21 @@ export default async function HomePage() {
       </section>
 
       <section aria-labelledby="tilt-heading" className="mx-auto w-full max-w-6xl px-4 py-24 sm:px-6 lg:px-10">
-        <h2 id="tilt-heading" className="font-display text-4xl tracking-tight text-foreground sm:text-5xl">
-          {t('home.tilt.title')}
-        </h2>
+        <div className="grid items-end gap-8 lg:grid-cols-[1fr_auto] lg:gap-12">
+          <h2 id="tilt-heading" className="font-display text-4xl tracking-tight text-foreground sm:text-5xl">
+            {t('home.tilt.title')}
+          </h2>
+          <div className="relative hidden h-32 w-56 shrink-0 overflow-hidden rounded-2xl border border-border shadow-elevation-2 lg:block">
+            <Image
+              src={unsplashUrl(STOCK_IMAGES.focusGlow.src, { w: 448, h: 256 })}
+              alt={STOCK_IMAGES.focusGlow.alt[locale]}
+              fill
+              sizes="224px"
+              className="object-cover"
+            />
+            <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(0deg,color-mix(in_oklab,var(--background)_35%,transparent),transparent_60%)]" />
+          </div>
+        </div>
         <div className="mt-12">
           <TiltObjects items={[0, 1, 2, 3].map((i) => ({ icon: TILT_ICONS[i], title: t(`home.tilt.items.${i}.title`), body: t(`home.tilt.items.${i}.body`) }))} />
         </div>
