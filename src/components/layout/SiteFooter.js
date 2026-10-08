@@ -1,5 +1,6 @@
 import { cacheLife } from 'next/cache';
 import Logo from '@/components/ui/Logo';
+import { brand } from '@/constants/brand';
 import { getI18n } from '@/i18n/dictionaries';
 import { Link } from '@/i18n/navigation';
 import { LanguageSegmented, ThemeSegmented } from './PreferenceMenus';
@@ -19,11 +20,21 @@ export default async function SiteFooter() {
   const link = 'text-sm text-foreground-muted transition-colors hover:text-foreground';
 
   return (
-    <footer className="mt-auto border-t border-border bg-surface">
+    <footer className="relative mt-auto overflow-hidden border-t border-border bg-surface">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-px bg-gradient-to-r from-transparent via-secondary/60 to-transparent"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -top-24 start-1/2 -z-10 size-[40rem] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,color-mix(in_oklab,var(--primary)_12%,transparent),transparent_72%)] blur-3xl rtl:translate-x-1/2"
+      />
+
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-[1.4fr_1fr_1fr_1.4fr] lg:px-10">
         <div>
           <Logo markClassName="size-7" wordClassName="text-xl" lang={locale} />
-          <p className="mt-4 max-w-xs text-sm leading-6 text-foreground-muted">{t('footer.about')}</p>
+          <p className="mt-4 font-display text-lg italic text-foreground">{brand.tagline[locale]}</p>
+          <p className="mt-2 max-w-xs text-sm leading-6 text-foreground-muted">{t('footer.about')}</p>
         </div>
 
         <nav aria-labelledby="footer-explore">
