@@ -1,3 +1,4 @@
+import { ArrowRight, GraduationCap } from 'lucide-react';
 import Avatar from '@/components/ui/Avatar';
 import GsapReveal from '@/components/motion/GsapReveal';
 import Card, { CardGlow } from '@/components/ui/Card';
@@ -25,15 +26,32 @@ export default async function InstructorGrid({ emptyTitle, emptyBody, limit }) {
         const headline = (locale === 'ar' ? profile.headlineAr : profile.headlineEn) || t('instructors.noHeadline');
         return (
           <li key={profile.id} data-reveal>
-            <Card as={Link} href={`/instructors/${profile.id}`} variant="glass" hover className="flex h-full items-center gap-4">
+            <Card
+              as={Link}
+              href={`/instructors/${profile.id}`}
+              variant="glass"
+              hover
+              className="flex h-full flex-col items-center p-7 text-center"
+            >
               <CardGlow tone="secondary" />
-              <span className="relative transition-transform duration-300 group-hover:scale-105">
-                <Avatar user={profile.user} size="lg" />
-              </span>
-              <div className="relative min-w-0">
-                <h3 className="truncate text-lg font-semibold text-foreground">{profile.user.name}</h3>
-                <p className="mt-1 line-clamp-2 text-sm leading-6 text-foreground-muted">{headline}</p>
+              <div className="relative shrink-0">
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-0 -z-10 m-auto size-20 rounded-full bg-[radial-gradient(closest-side,color-mix(in_oklab,var(--secondary)_38%,transparent),transparent_75%)] opacity-0 blur-lg transition-opacity duration-300 group-hover:opacity-100"
+                />
+                <span className="inline-block transition-transform duration-300 group-hover:scale-105">
+                  <Avatar user={profile.user} size="xl" />
+                </span>
+                <span className="absolute -bottom-1 -end-1 grid size-6 place-items-center rounded-full border-2 border-surface bg-primary text-primary-foreground">
+                  <GraduationCap className="size-3" aria-hidden="true" />
+                </span>
               </div>
+              <h3 className="relative mt-4 truncate text-lg font-semibold text-foreground">{profile.user.name}</h3>
+              <p className="relative mt-1.5 line-clamp-2 text-sm leading-6 text-foreground-muted">{headline}</p>
+              <span className="relative mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                {t('instructors.profile.view')}
+                <ArrowRight className="size-3.5 rtl:-scale-x-100" aria-hidden="true" />
+              </span>
             </Card>
           </li>
         );

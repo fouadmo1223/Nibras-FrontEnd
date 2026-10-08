@@ -22,26 +22,28 @@ export default async function CategoryGrid({ emptyTitle, emptyBody }) {
         const name = locale === 'ar' ? c.nameAr : c.nameEn;
         const description = locale === 'ar' ? c.descriptionAr : c.descriptionEn;
         return (
-          <Card key={c.id} as="li" variant="glass" hover data-reveal className="flex flex-col">
+          <Card key={c.id} as="li" variant="glass" hover data-reveal className="flex flex-col p-3">
             <CardGlow />
             {c.imageUrl ? (
-              <div className="relative -mx-6 -mt-6 mb-5 aspect-[16/10] overflow-hidden rounded-t-2xl">
+              <div className="relative aspect-[16/10] overflow-hidden rounded-xl border border-border/60 shadow-elevation-1">
                 <Image
                   src={c.imageUrl}
                   alt=""
                   fill
                   sizes="(min-width: 1024px) 360px, 90vw"
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                 />
-                <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-gradient-to-t from-surface/80 via-transparent to-transparent" />
+                <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
               </div>
             ) : null}
-            <h3 className="relative text-lg font-semibold text-foreground">{name}</h3>
-            {description ? <p className="relative mt-2 text-sm leading-6 text-foreground-muted">{description}</p> : null}
-            <span className="relative mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-primary">
-              {t('home.sections.categories.browse')}
-              <ArrowRight className="size-3.5 transition-transform duration-300 group-hover:translate-x-1 rtl:-scale-x-100 rtl:group-hover:-translate-x-1" aria-hidden="true" />
-            </span>
+            <div className="relative flex flex-1 flex-col px-2 pb-2 pt-4">
+              <h3 className="text-lg font-semibold text-foreground">{name}</h3>
+              {description ? <p className="mt-1.5 flex-1 text-sm leading-6 text-foreground-muted">{description}</p> : null}
+              <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-primary">
+                {t('home.sections.categories.browse')}
+                <ArrowRight className="size-3.5 transition-transform duration-300 group-hover:translate-x-1 rtl:-scale-x-100 rtl:group-hover:-translate-x-1" aria-hidden="true" />
+              </span>
+            </div>
           </Card>
         );
       })}

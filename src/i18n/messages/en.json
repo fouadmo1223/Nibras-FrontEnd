@@ -335,7 +335,8 @@
     "profile": {
       "website": "Website",
       "linkedin": "LinkedIn profile",
-      "x": "X (Twitter) profile"
+      "x": "X (Twitter) profile",
+      "view": "View profile"
     }
   }
 }
