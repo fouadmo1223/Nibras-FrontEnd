@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import { ArrowRight, GraduationCap, Sparkles } from 'lucide-react';
 import CategoryGrid from '@/components/sections/CategoryGrid';
 import HeroIllustration from '@/components/sections/HeroIllustration';
+import InstructorGrid from '@/components/sections/InstructorGrid';
 import Journey from '@/components/sections/Journey';
 import TiltObjects from '@/components/sections/TiltObjects';
 import HomeStats, { HomeStatsSkeleton } from '@/components/sections/HomeStats';
@@ -116,7 +117,14 @@ export default async function HomePage() {
         <h2 id="instructors-heading" className="font-display text-3xl tracking-tight text-foreground">
           {t('home.sections.instructors.title')}
         </h2>
-        <EmptyState title={t('home.sections.instructors.emptyTitle')} body={t('home.sections.instructors.emptyBody')} />
+        <Suspense fallback={<div className="mt-8 h-32 animate-pulse rounded-2xl bg-surface-muted" aria-hidden="true" />}>
+          <InstructorGrid emptyTitle={t('home.sections.instructors.emptyTitle')} emptyBody={t('home.sections.instructors.emptyBody')} limit={3} />
+        </Suspense>
+        <div className="mt-6 text-center">
+          <Link href="/instructors" className="text-sm font-medium text-primary hover:underline">
+            {t('home.sections.instructors.viewAll')}
+          </Link>
+        </div>
       </section>
 
       <section aria-labelledby="testimonials-heading" className="mx-auto w-full max-w-6xl px-4 pb-24 sm:px-6 lg:px-10">

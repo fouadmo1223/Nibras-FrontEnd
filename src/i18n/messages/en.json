@@ -8,7 +8,8 @@
     "forgotPassword": "Forgot password",
     "resetPassword": "Reset password",
     "verifyEmail": "Confirm your email",
-    "notFound": "Page not found"
+    "notFound": "Page not found",
+    "instructors": "Instructors"
   },
   "common": {
     "brandHome": "{brand} home",
@@ -28,7 +29,8 @@
     "signIn": "Sign in",
     "getStarted": "Get started",
     "accountMenu": "Account menu",
-    "signedInAs": "Signed in as"
+    "signedInAs": "Signed in as",
+    "instructors": "Instructors"
   },
   "language": {
     "label": "Language",
@@ -94,7 +96,8 @@
       "instructors": {
         "title": "Taught by instructors",
         "emptyTitle": "Instructor profiles are coming",
-        "emptyBody": "Our instructors will introduce themselves here once their first course is ready."
+        "emptyBody": "Our instructors will introduce themselves here once their first course is ready.",
+        "viewAll": "View all instructors"
       },
       "testimonials": {
         "title": "What learners say",
@@ -320,5 +323,17 @@
     "title": "This page doesn’t exist",
     "body": "The link may be broken, or the page may have moved.",
     "home": "Back to home"
+  },
+  "instructors": {
+    "noHeadline": "Instructor at {brand}",
+    "directory": {
+      "title": "Our instructors",
+      "subtitle": "Learn from real practitioners. Every instructor here has an active, verified account."
+    },
+    "profile": {
+      "website": "Website",
+      "linkedin": "LinkedIn profile",
+      "x": "X (Twitter) profile"
+    }
   }
 }
