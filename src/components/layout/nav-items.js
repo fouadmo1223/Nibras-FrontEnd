@@ -1,11 +1,12 @@
-import { House, Users } from 'lucide-react';
+import { BookOpen, House, Users } from 'lucide-react';
 
 /**
- * Primary website navigation. Items are added as their pages ship (courses, paths,
+ * Primary website navigation. Items are added as their pages ship (paths,
  * pricing…); nothing is linked before it exists.
  */
 export const NAV_ITEMS = [
   { key: 'home', href: '/', icon: House },
+  { key: 'courses', href: '/courses', icon: BookOpen },
   { key: 'instructors', href: '/instructors', icon: Users },
 ];
 

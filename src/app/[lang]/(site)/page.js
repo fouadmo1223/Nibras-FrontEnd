@@ -1,7 +1,8 @@
 import { Suspense } from 'react';
 import Image from 'next/image';
-import { ArrowRight, Award, BookOpen, GraduationCap, MessageCircleHeart, Sparkles, Tags, TrendingUp } from 'lucide-react';
+import { ArrowRight, Award, GraduationCap, MessageCircleHeart, Sparkles, Tags, TrendingUp } from 'lucide-react';
 import CategoryGrid from '@/components/sections/CategoryGrid';
+import CourseGrid from '@/components/sections/CourseGrid';
 import GsapReveal from '@/components/motion/GsapReveal';
 import HeroEntrance from '@/components/sections/HeroEntrance';
 import InstructorGrid from '@/components/sections/InstructorGrid';
@@ -173,7 +174,14 @@ export default async function HomePage() {
         <h2 id="courses-heading" className="font-display text-3xl tracking-tight text-foreground">
           {t('home.sections.courses.title')}
         </h2>
-        <EmptyState icon={BookOpen} title={t('home.sections.courses.emptyTitle')} body={t('home.sections.courses.emptyBody')} />
+        <Suspense fallback={<div className="mt-8 h-32 animate-pulse rounded-2xl bg-surface-muted" aria-hidden="true" />}>
+          <CourseGrid emptyTitle={t('home.sections.courses.emptyTitle')} emptyBody={t('home.sections.courses.emptyBody')} limit={3} />
+        </Suspense>
+        <div className="mt-6 text-center">
+          <Link href="/courses" className="text-sm font-medium text-primary hover:underline">
+            {t('home.sections.courses.viewAll')}
+          </Link>
+        </div>
       </section>
 
       <Journey

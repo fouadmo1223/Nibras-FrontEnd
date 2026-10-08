@@ -30,7 +30,8 @@
     "getStarted": "Get started",
     "accountMenu": "Account menu",
     "signedInAs": "Signed in as",
-    "instructors": "Instructors"
+    "instructors": "Instructors",
+    "courses": "Courses"
   },
   "language": {
     "label": "Language",
@@ -93,7 +94,8 @@
       "courses": {
         "title": "Featured courses",
         "emptyTitle": "Courses are being prepared",
-        "emptyBody": "Our first courses will be listed here. Create an account to be notified when they open."
+        "emptyBody": "Our first courses will be listed here. Create an account to be notified when they open.",
+        "viewAll": "View all courses"
       },
       "instructors": {
         "title": "Taught by instructors",
@@ -343,6 +345,31 @@
       "linkedin": "LinkedIn profile",
       "x": "X (Twitter) profile",
       "view": "View profile"
+    }
+  },
+  "courses": {
+    "directory": {
+      "title": "All courses",
+      "subtitle": "Structured courses taught by real instructors. Browse by category to find your path.",
+      "allCategories": "All categories"
+    },
+    "card": {
+      "free": "Free",
+      "by": "By {name}",
+      "view": "View course"
+    },
+    "level": {
+      "BEGINNER": "Beginner",
+      "INTERMEDIATE": "Intermediate",
+      "ADVANCED": "Advanced"
+    },
+    "detail": {
+      "about": "About this course",
+      "instructor": "Your instructor",
+      "category": "Category",
+      "level": "Level",
+      "price": "Price",
+      "viewInstructor": "View instructor profile"
     }
   }
 }
