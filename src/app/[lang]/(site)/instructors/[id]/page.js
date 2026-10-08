@@ -15,7 +15,7 @@ export async function generateMetadata({ params }) {
 
 function ProfileSkeleton() {
   return (
-    <div className="flex flex-col items-center sm:flex-row sm:items-start sm:gap-6" aria-hidden="true">
+    <div className="glass flex flex-col items-center rounded-3xl border p-8 shadow-elevation-3 sm:flex-row sm:items-start sm:gap-6 sm:p-10" aria-hidden="true">
       <div className="size-24 animate-pulse rounded-full bg-surface-muted" />
       <div className="mt-5 w-full max-w-sm space-y-3 sm:mt-0">
         <div className="h-8 animate-pulse rounded-md bg-surface-muted" />
@@ -29,10 +29,17 @@ function ProfileSkeleton() {
 // (header, footer) can still prerender around this dynamic page.
 export default function InstructorProfilePage({ params }) {
   return (
-    <div className="mx-auto w-full max-w-3xl px-4 py-16 sm:px-6 lg:px-10">
-      <Suspense fallback={<ProfileSkeleton />}>
-        <InstructorProfileView params={params} />
-      </Suspense>
+    <div className="relative isolate overflow-hidden">
+      {/* Cinematic backdrop, matching the homepage hero. */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
+        <div className="absolute -left-40 top-0 size-[40rem] rounded-full bg-[radial-gradient(closest-side,color-mix(in_oklab,var(--primary)_22%,transparent),transparent)] blur-2xl" />
+        <div className="absolute -right-40 top-20 size-[36rem] rounded-full bg-[radial-gradient(closest-side,color-mix(in_oklab,var(--secondary)_18%,transparent),transparent)] blur-2xl" />
+      </div>
+      <div className="mx-auto w-full max-w-3xl px-4 py-16 sm:px-6 lg:px-10">
+        <Suspense fallback={<ProfileSkeleton />}>
+          <InstructorProfileView params={params} />
+        </Suspense>
+      </div>
     </div>
   );
 }
