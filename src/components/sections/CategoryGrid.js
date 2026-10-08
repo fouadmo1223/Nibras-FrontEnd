@@ -1,3 +1,5 @@
+import { ArrowRight } from 'lucide-react';
+import GsapReveal from '@/components/motion/GsapReveal';
 import { getI18n } from '@/i18n/dictionaries';
 import { getPublishedCategories } from '@/services/categories.service';
 
@@ -13,18 +15,29 @@ export default async function CategoryGrid({ emptyTitle, emptyBody }) {
     );
   }
   return (
-    <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <GsapReveal as="ul" className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {categories.map((c) => {
         const name = locale === 'ar' ? c.nameAr : c.nameEn;
         const description = locale === 'ar' ? c.descriptionAr : c.descriptionEn;
         return (
-          <li key={c.id} className="group rounded-2xl border border-border bg-surface p-6 shadow-elevation-1 transition-all duration-300 hover:-translate-y-1 hover:shadow-elevation-2">
-            <h3 className="text-lg font-semibold text-foreground">{name}</h3>
-            {description ? <p className="mt-2 text-sm leading-6 text-foreground-muted">{description}</p> : null}
-            <span className="mt-4 inline-flex items-center text-sm font-medium text-primary">{t('home.sections.categories.browse')}</span>
+          <li
+            key={c.id}
+            data-reveal
+            className="group relative overflow-hidden rounded-2xl border border-border bg-surface/80 p-6 shadow-elevation-1 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-elevation-2"
+          >
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute -end-10 -top-10 size-36 rounded-full bg-[radial-gradient(closest-side,color-mix(in_oklab,var(--primary)_22%,transparent),transparent)] opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100"
+            />
+            <h3 className="relative text-lg font-semibold text-foreground">{name}</h3>
+            {description ? <p className="relative mt-2 text-sm leading-6 text-foreground-muted">{description}</p> : null}
+            <span className="relative mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-primary">
+              {t('home.sections.categories.browse')}
+              <ArrowRight className="size-3.5 transition-transform duration-300 group-hover:translate-x-1 rtl:-scale-x-100 rtl:group-hover:-translate-x-1" aria-hidden="true" />
+            </span>
           </li>
         );
       })}
-    </ul>
+    </GsapReveal>
   );
 }

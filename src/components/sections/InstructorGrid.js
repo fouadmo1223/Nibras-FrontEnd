@@ -1,4 +1,5 @@
 import Avatar from '@/components/ui/Avatar';
+import GsapReveal from '@/components/motion/GsapReveal';
 import { getI18n } from '@/i18n/dictionaries';
 import { Link } from '@/i18n/navigation';
 import { getPublishedInstructors } from '@/services/instructors.service';
@@ -18,17 +19,23 @@ export default async function InstructorGrid({ emptyTitle, emptyBody, limit }) {
   }
 
   return (
-    <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <GsapReveal as="ul" className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {rows.map((profile) => {
         const headline = (locale === 'ar' ? profile.headlineAr : profile.headlineEn) || t('instructors.noHeadline');
         return (
-          <li key={profile.id}>
+          <li key={profile.id} data-reveal>
             <Link
               href={`/instructors/${profile.id}`}
-              className="group flex h-full items-center gap-4 rounded-2xl border border-border bg-surface p-6 shadow-elevation-1 transition-all duration-300 hover:-translate-y-1 hover:shadow-elevation-2"
+              className="group relative flex h-full items-center gap-4 overflow-hidden rounded-2xl border border-border bg-surface/80 p-6 shadow-elevation-1 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-elevation-2"
             >
-              <Avatar user={profile.user} size="lg" />
-              <div className="min-w-0">
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -end-10 -top-10 size-36 rounded-full bg-[radial-gradient(closest-side,color-mix(in_oklab,var(--secondary)_22%,transparent),transparent)] opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100"
+              />
+              <span className="relative transition-transform duration-300 group-hover:scale-105">
+                <Avatar user={profile.user} size="lg" />
+              </span>
+              <div className="relative min-w-0">
                 <h3 className="truncate text-lg font-semibold text-foreground">{profile.user.name}</h3>
                 <p className="mt-1 line-clamp-2 text-sm leading-6 text-foreground-muted">{headline}</p>
               </div>
@@ -36,6 +43,6 @@ export default async function InstructorGrid({ emptyTitle, emptyBody, limit }) {
           </li>
         );
       })}
-    </ul>
+    </GsapReveal>
   );
 }
