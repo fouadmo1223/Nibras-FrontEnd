@@ -73,6 +73,33 @@
   }
 }
 
+/* Hero entrance: hidden starting state for HeroEntrance's GSAP timeline, so there's no flash
+   of fully-visible content between server render and hydration. */
+.hero-entrance [data-hero="pill"],
+.hero-entrance [data-hero="title"],
+.hero-entrance [data-hero="body"],
+.hero-entrance [data-hero="ctas"],
+.hero-entrance [data-hero="accent"] {
+  opacity: 0;
+  transform: translateY(14px);
+}
+.hero-entrance [data-hero="image"] {
+  clip-path: inset(0% 0% 100% 0%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-entrance [data-hero="pill"],
+  .hero-entrance [data-hero="title"],
+  .hero-entrance [data-hero="body"],
+  .hero-entrance [data-hero="ctas"],
+  .hero-entrance [data-hero="accent"] {
+    opacity: 1;
+    transform: none;
+  }
+  .hero-entrance [data-hero="image"] {
+    clip-path: inset(0% 0% 0% 0%);
+  }
+}
+
 /* Arabic is cursive: any letter-spacing (tracking-* utilities) breaks letter joining. */
 html[dir="rtl"] * {
   letter-spacing: 0 !important;

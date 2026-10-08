@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { ArrowRight, Award, BookOpen, GraduationCap, MessageCircleHeart, Sparkles, Tags, TrendingUp } from 'lucide-react';
 import CategoryGrid from '@/components/sections/CategoryGrid';
 import GsapReveal from '@/components/motion/GsapReveal';
+import HeroEntrance from '@/components/sections/HeroEntrance';
 import InstructorGrid from '@/components/sections/InstructorGrid';
 import Journey from '@/components/sections/Journey';
 import OrbitAccent from '@/components/sections/OrbitAccent';
@@ -31,22 +32,27 @@ export default async function HomePage() {
       <section className="relative isolate -mt-24 flex min-h-dvh items-center overflow-hidden pb-16 pt-28">
         {/* Full-bleed cinematic backdrop: glows, a fine grid and a vignette, edge to edge. */}
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
-          <div className="absolute -left-40 top-1/4 size-[60rem] rounded-full bg-[radial-gradient(closest-side,color-mix(in_oklab,var(--primary)_28%,transparent),transparent)] blur-2xl" />
-          <div className="absolute -right-40 -top-40 size-[55rem] rounded-full bg-[radial-gradient(closest-side,color-mix(in_oklab,var(--secondary)_22%,transparent),transparent)] blur-2xl" />
+          <div className="absolute -left-40 top-1/4 size-[35rem] rounded-full bg-[radial-gradient(closest-side,color-mix(in_oklab,var(--primary)_28%,transparent),transparent)] blur-2xl" />
+          <div className="absolute -right-40 -top-40 size-[50rem] rounded-full bg-[radial-gradient(closest-side,color-mix(in_oklab,var(--secondary)_22%,transparent),transparent)] blur-2xl" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,var(--background)_100%)]" />
         </div>
 
-        <div className="mx-auto grid w-full max-w-7xl gap-14 px-4 sm:px-6 lg:grid-cols-[1fr_1.05fr] lg:items-center lg:gap-10 lg:px-10">
-          <div className="animate-fade-up">
-            <p className="inline-flex items-center gap-2 rounded-md border border-border bg-surface px-2.5 py-1 text-xs font-medium text-foreground-muted">
+        <HeroEntrance className="mx-auto grid w-full max-w-7xl gap-14 px-4 sm:px-6 lg:grid-cols-[1fr_1.05fr] lg:items-center lg:gap-10 lg:px-10">
+          <div>
+            <p
+              data-hero="pill"
+              className="inline-flex items-center gap-2 rounded-md border border-border bg-surface px-2.5 py-1 text-xs font-medium text-foreground-muted"
+            >
               <Sparkles className="size-3.5 text-secondary" aria-hidden="true" />
               {t('home.hero.eyebrow')}
             </p>
-            <h1 className="mt-6 font-display text-5xl leading-[1.04] tracking-tight text-foreground sm:text-6xl lg:text-7xl">
+            <h1 data-hero="title" className="mt-6 font-display text-5xl leading-[1.04] tracking-tight text-foreground sm:text-6xl lg:text-7xl">
               {t('home.hero.titleStart')} <em className="text-primary">{t('home.hero.titleEmphasis')}</em> {t('home.hero.titleEnd')}
             </h1>
-            <p className="mt-6 max-w-xl text-lg leading-8 text-foreground-muted">{t('home.hero.body')}</p>
-            <div className="mt-9 flex flex-wrap items-center gap-3">
+            <p data-hero="body" className="mt-6 max-w-xl text-lg leading-8 text-foreground-muted">
+              {t('home.hero.body')}
+            </p>
+            <div data-hero="ctas" className="mt-9 flex flex-wrap items-center gap-3">
               <Link
                 href="/register"
                 className="inline-flex h-12 items-center gap-2 rounded-lg bg-primary px-6 font-medium text-primary-foreground shadow-elevation-2 transition-all duration-200 hover:scale-[1.03] hover:bg-primary-hover hover:shadow-elevation-3 active:scale-[0.98]"
@@ -63,10 +69,10 @@ export default async function HomePage() {
             </div>
           </div>
 
-          <div className="relative animate-fade-up">
+          <div className="relative">
             {/* Glowing halo behind the photo. */}
             <div aria-hidden="true" className="absolute inset-0 -z-10 m-auto size-[min(34rem,100%)] rounded-full bg-[radial-gradient(closest-side,color-mix(in_oklab,var(--primary)_30%,transparent),transparent_72%)] blur-3xl" />
-            <div className="glass overflow-hidden rounded-3xl border p-2.5 shadow-elevation-3">
+            <div data-hero="image" className="glass overflow-hidden rounded-3xl border p-2.5 shadow-elevation-3">
               <div className="relative aspect-[6/5] overflow-hidden rounded-2xl">
                 <Image
                   src={unsplashUrl(STOCK_IMAGES.heroLearner.src, { w: 900, h: 750 })}
@@ -98,6 +104,7 @@ export default async function HomePage() {
 
             {/* Floating UI chrome: decorative, illustrative only — no fabricated names/ratings. */}
             <div
+              data-hero="accent"
               aria-hidden="true"
               className="glass motion-safe:animate-float-slow absolute -start-6 top-10 hidden w-48 rounded-2xl border p-3.5 shadow-elevation-3 sm:block lg:-start-10"
             >
@@ -109,6 +116,7 @@ export default async function HomePage() {
               </div>
             </div>
             <div
+              data-hero="accent"
               aria-hidden="true"
               className="glass motion-safe:animate-float-slower absolute -end-4 bottom-16 hidden w-44 rounded-2xl border p-3.5 shadow-elevation-3 sm:block lg:-end-8"
             >
@@ -120,26 +128,34 @@ export default async function HomePage() {
               </div>
             </div>
           </div>
-        </div>
+        </HeroEntrance>
       </section>
 
-      <section aria-labelledby="tilt-heading" className="mx-auto w-full max-w-6xl px-4 py-24 sm:px-6 lg:px-10">
-        <div className="grid items-end gap-8 lg:grid-cols-[1fr_auto] lg:gap-12">
+      <section aria-labelledby="tilt-heading" className="relative mx-auto w-full max-w-6xl overflow-hidden px-4 py-24 sm:px-6 lg:px-10">
+        {/* Large editorial photo bleeding off the top/start edge, behind the heading. */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -top-16 start-0 -z-10 h-[26rem] w-[30rem] max-w-[85vw] opacity-55 sm:-top-20"
+        >
+          <Image
+            src={unsplashUrl(STOCK_IMAGES.focusGlow.src, { w: 960, h: 832 })}
+            alt={STOCK_IMAGES.focusGlow.alt[locale]}
+            fill
+            sizes="480px"
+            className="rounded-[2.5rem] object-cover"
+          />
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 rounded-[2.5rem] bg-[linear-gradient(200deg,transparent_10%,var(--background)_85%),radial-gradient(60%_60%_at_30%_30%,transparent,var(--background)_100%)]"
+          />
+        </div>
+
+        <div className="relative lg:max-w-xl">
           <h2 id="tilt-heading" className="font-display text-4xl tracking-tight text-foreground sm:text-5xl">
             {t('home.tilt.title')}
           </h2>
-          <div className="relative hidden h-32 w-56 shrink-0 overflow-hidden rounded-2xl border border-border shadow-elevation-2 lg:block">
-            <Image
-              src={unsplashUrl(STOCK_IMAGES.focusGlow.src, { w: 448, h: 256 })}
-              alt={STOCK_IMAGES.focusGlow.alt[locale]}
-              fill
-              sizes="224px"
-              className="object-cover"
-            />
-            <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(0deg,color-mix(in_oklab,var(--background)_35%,transparent),transparent_60%)]" />
-          </div>
         </div>
-        <div className="mt-12">
+        <div className="relative mt-12">
           <TiltObjects items={[0, 1, 2, 3].map((i) => ({ icon: TILT_ICONS[i], title: t(`home.tilt.items.${i}.title`), body: t(`home.tilt.items.${i}.body`) }))} />
         </div>
       </section>
