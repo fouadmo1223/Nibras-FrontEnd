@@ -326,6 +326,12 @@
     "body": "The link may be broken, or the page may have moved.",
     "home": "Back to home"
   },
+  "errorPage": {
+    "title": "Something went wrong",
+    "body": "An unexpected error interrupted this page. Trying again usually helps.",
+    "retry": "Try again",
+    "home": "Back to home"
+  },
   "instructors": {
     "noHeadline": "Instructor at {brand}",
     "directory": {
