@@ -3,6 +3,7 @@ import { ArrowRight, BookOpen } from 'lucide-react';
 import Avatar from '@/components/ui/Avatar';
 import GsapReveal from '@/components/motion/GsapReveal';
 import Card, { CardGlow } from '@/components/ui/Card';
+import CoursePrice, { discountPercent } from '@/components/ui/CoursePrice';
 import { getI18n } from '@/i18n/dictionaries';
 import { Link } from '@/i18n/navigation';
 import { getPublishedCourses } from '@/services/courses.service';
@@ -33,11 +34,14 @@ export default async function CourseGrid({ emptyTitle, emptyBody, limit, categor
             <Link href={`/courses/${course.slug}`} className="flex flex-1 flex-col">
               <div className="relative aspect-[16/10] overflow-hidden rounded-xl border border-border/60 shadow-elevation-1">
                 {course.imageUrl ? (
+                  // unoptimized: already a pre-sized Unsplash URL or a processed WebP from the API's
+                  // media pipeline — Next's optimizer would otherwise reject an unallowlisted host.
                   <Image
                     src={course.imageUrl}
                     alt=""
                     fill
                     sizes="(min-width: 1024px) 360px, 90vw"
+                    unoptimized
                     className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                   />
                 ) : (
@@ -49,6 +53,11 @@ export default async function CourseGrid({ emptyTitle, emptyBody, limit, categor
                 <span className="absolute start-2.5 top-2.5 rounded-md bg-surface/90 px-2 py-0.5 text-xs font-medium text-foreground backdrop-blur-sm">
                   {categoryName}
                 </span>
+                {discountPercent(course.priceCents, course.compareAtPriceCents) ? (
+                  <span className="absolute end-2.5 top-2.5 rounded-md bg-error px-2 py-0.5 text-xs font-semibold text-white shadow-elevation-1">
+                    {t('courses.card.off', { percent: discountPercent(course.priceCents, course.compareAtPriceCents) })}
+                  </span>
+                ) : null}
               </div>
               <div className="relative flex flex-1 flex-col px-2 pb-2 pt-4">
                 <h3 className="text-lg font-semibold text-foreground">{title}</h3>
@@ -58,9 +67,13 @@ export default async function CourseGrid({ emptyTitle, emptyBody, limit, categor
                     <Avatar user={course.instructor.user} size="sm" />
                     <span className="truncate text-sm text-foreground-muted">{course.instructor.user.name}</span>
                   </div>
-                  <span className="shrink-0 text-sm font-semibold text-foreground">
-                    {course.priceCents === 0 ? t('courses.card.free') : format.currency(course.priceCents / 100)}
-                  </span>
+                  <CoursePrice
+                    priceCents={course.priceCents}
+                    compareAtPriceCents={course.compareAtPriceCents}
+                    format={format}
+                    t={t}
+                    className="shrink-0 justify-end"
+                  />
                 </div>
                 <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-primary">
                   {t('courses.card.view')}

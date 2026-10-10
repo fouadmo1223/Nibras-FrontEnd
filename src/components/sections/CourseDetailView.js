@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { BarChart3, BookOpen, Tag } from 'lucide-react';
 import Avatar from '@/components/ui/Avatar';
 import Card from '@/components/ui/Card';
+import CoursePrice from '@/components/ui/CoursePrice';
 import { getI18n } from '@/i18n/dictionaries';
 import { Link } from '@/i18n/navigation';
 import { getCourseBySlug } from '@/services/courses.service';
@@ -31,7 +32,9 @@ export default async function CourseDetailView({ params }) {
 
           <div className="relative mt-8 aspect-[16/9] overflow-hidden rounded-2xl border border-border shadow-elevation-2">
             {course.imageUrl ? (
-              <Image src={course.imageUrl} alt="" fill sizes="(min-width: 1024px) 640px, 90vw" className="object-cover" priority />
+              // unoptimized: see CourseGrid.js — already pre-sized or processed, and avoids needing
+              // every self-hosted media host allowlisted in next.config.js.
+              <Image src={course.imageUrl} alt="" fill sizes="(min-width: 1024px) 640px, 90vw" unoptimized priority className="object-cover" />
             ) : (
               <div className="grid size-full place-items-center bg-surface-muted text-foreground-subtle">
                 <BookOpen className="size-12" aria-hidden="true" />
@@ -45,13 +48,24 @@ export default async function CourseDetailView({ params }) {
               <p className="mt-3 whitespace-pre-line leading-8 text-foreground-muted">{description}</p>
             </Card>
           ) : null}
+
+          {course.images?.length > 0 ? (
+            <div className="mt-8">
+              <h2 className="font-semibold text-foreground">{t('courses.detail.gallery')}</h2>
+              <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
+                {course.images.map((image) => (
+                  <div key={image.id} className="relative aspect-[4/3] overflow-hidden rounded-xl border border-border shadow-elevation-1">
+                    <Image src={image.imageUrl} alt="" fill sizes="(min-width: 1024px) 200px, 45vw" unoptimized className="object-cover" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
         </div>
 
         <div className="space-y-6 lg:sticky lg:top-24">
           <Card variant="glass" className="p-6">
-            <p className="font-display text-3xl tracking-tight text-foreground">
-              {course.priceCents === 0 ? t('courses.card.free') : format.currency(course.priceCents / 100)}
-            </p>
+            <CoursePrice priceCents={course.priceCents} compareAtPriceCents={course.compareAtPriceCents} format={format} t={t} size="lg" />
             <dl className="mt-5 space-y-3 border-t border-border pt-5 text-sm">
               <div className="flex items-center justify-between gap-3">
                 <dt className="flex items-center gap-2 text-foreground-muted">

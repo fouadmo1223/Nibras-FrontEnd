@@ -359,7 +359,8 @@
     "card": {
       "free": "Free",
       "by": "By {name}",
-      "view": "View course"
+      "view": "View course",
+      "off": "-{percent}%"
     },
     "level": {
       "BEGINNER": "Beginner",
@@ -368,6 +369,7 @@
     },
     "detail": {
       "about": "About this course",
+      "gallery": "Gallery",
       "instructor": "Your instructor",
       "category": "Category",
       "level": "Level",

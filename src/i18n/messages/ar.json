@@ -359,7 +359,8 @@
     "card": {
       "free": "مجانية",
       "by": "بواسطة {name}",
-      "view": "عرض الدورة"
+      "view": "عرض الدورة",
+      "off": "خصم {percent}٪"
     },
     "level": {
       "BEGINNER": "مبتدئ",
@@ -368,6 +369,7 @@
     },
     "detail": {
       "about": "عن هذه الدورة",
+      "gallery": "معرض الصور",
       "instructor": "مدرّبك",
       "category": "التصنيف",
       "level": "المستوى",

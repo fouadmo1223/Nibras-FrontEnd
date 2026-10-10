@@ -28,11 +28,15 @@ export default async function CategoryGrid({ emptyTitle, emptyBody }) {
               <CardGlow />
               {c.imageUrl ? (
                 <div className="relative aspect-[16/10] overflow-hidden rounded-xl border border-border/60 shadow-elevation-1">
+                  {/* Either a pre-sized Unsplash URL or an already-processed WebP from the API's media
+                      pipeline — unoptimized, since Next's optimizer would otherwise reject any host
+                      (e.g. a self-hosted upload's domain) not explicitly allowlisted in next.config.js. */}
                   <Image
                     src={c.imageUrl}
                     alt=""
                     fill
                     sizes="(min-width: 1024px) 360px, 90vw"
+                    unoptimized
                     className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                   />
                   <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
