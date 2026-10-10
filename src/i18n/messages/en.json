@@ -82,7 +82,8 @@
     },
     "stats": {
       "learners": "Learners",
-      "instructors": "Instructors"
+      "instructors": "Instructors",
+      "courses": "Courses"
     },
     "sections": {
       "categories": {

@@ -82,7 +82,8 @@
     },
     "stats": {
       "learners": "متعلّمون",
-      "instructors": "مدرّبون"
+      "instructors": "مدرّبون",
+      "courses": "دورات"
     },
     "sections": {
       "categories": {
