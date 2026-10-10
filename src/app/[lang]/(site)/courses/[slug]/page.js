@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import CourseDetailView from '@/components/sections/CourseDetailView';
+import SectionErrorBoundary from '@/components/ui/SectionErrorBoundary';
 import { getCourseBySlug } from '@/services/courses.service';
 
 // No generateStaticParams: Cache Components needs at least one real param to prerender, and
@@ -31,9 +32,11 @@ function CourseSkeleton() {
 export default function CourseDetailPage({ params }) {
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 lg:px-10">
-      <Suspense fallback={<CourseSkeleton />}>
-        <CourseDetailView params={params} />
-      </Suspense>
+      <SectionErrorBoundary>
+        <Suspense fallback={<CourseSkeleton />}>
+          <CourseDetailView params={params} />
+        </Suspense>
+      </SectionErrorBoundary>
     </div>
   );
 }

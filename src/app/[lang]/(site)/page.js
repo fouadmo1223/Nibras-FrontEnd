@@ -10,6 +10,7 @@ import Journey from '@/components/sections/Journey';
 import OrbitAccent from '@/components/sections/OrbitAccent';
 import TiltObjects from '@/components/sections/TiltObjects';
 import HomeStats, { HomeStatsSkeleton } from '@/components/sections/HomeStats';
+import SectionErrorBoundary from '@/components/ui/SectionErrorBoundary';
 import { STOCK_IMAGES, unsplashUrl } from '@/constants/stock-images';
 import { getI18n } from '@/i18n/dictionaries';
 import { Link } from '@/i18n/navigation';
@@ -97,9 +98,11 @@ export default async function HomePage() {
               </div>
               <p className="px-3.5 pt-2 text-sm leading-6 text-foreground-muted">{t('home.hero.panelBody')}</p>
               <div className="mt-5 border-t border-border px-3.5 pb-3.5 pt-5">
-                <Suspense fallback={<HomeStatsSkeleton />}>
-                  <HomeStats />
-                </Suspense>
+                <SectionErrorBoundary>
+                  <Suspense fallback={<HomeStatsSkeleton />}>
+                    <HomeStats />
+                  </Suspense>
+                </SectionErrorBoundary>
               </div>
             </div>
 
@@ -165,18 +168,22 @@ export default async function HomePage() {
         <h2 id="categories-heading" className="font-display text-3xl tracking-tight text-foreground">
           {t('home.sections.categories.title')}
         </h2>
-        <Suspense fallback={<div className="mt-8 h-32 animate-pulse rounded-2xl bg-surface-muted" aria-hidden="true" />}>
-          <CategoryGrid emptyTitle={t('home.sections.categories.emptyTitle')} emptyBody={t('home.sections.categories.emptyBody')} />
-        </Suspense>
+        <SectionErrorBoundary>
+          <Suspense fallback={<div className="mt-8 h-32 animate-pulse rounded-2xl bg-surface-muted" aria-hidden="true" />}>
+            <CategoryGrid emptyTitle={t('home.sections.categories.emptyTitle')} emptyBody={t('home.sections.categories.emptyBody')} />
+          </Suspense>
+        </SectionErrorBoundary>
       </section>
 
       <section aria-labelledby="courses-heading" className="mx-auto w-full max-w-6xl px-4 pb-24 sm:px-6 lg:px-10">
         <h2 id="courses-heading" className="font-display text-3xl tracking-tight text-foreground">
           {t('home.sections.courses.title')}
         </h2>
-        <Suspense fallback={<div className="mt-8 h-32 animate-pulse rounded-2xl bg-surface-muted" aria-hidden="true" />}>
-          <CourseGrid emptyTitle={t('home.sections.courses.emptyTitle')} emptyBody={t('home.sections.courses.emptyBody')} limit={3} />
-        </Suspense>
+        <SectionErrorBoundary>
+          <Suspense fallback={<div className="mt-8 h-32 animate-pulse rounded-2xl bg-surface-muted" aria-hidden="true" />}>
+            <CourseGrid emptyTitle={t('home.sections.courses.emptyTitle')} emptyBody={t('home.sections.courses.emptyBody')} limit={3} />
+          </Suspense>
+        </SectionErrorBoundary>
         <div className="mt-6 text-center">
           <Link href="/courses" className="text-sm font-medium text-primary hover:underline">
             {t('home.sections.courses.viewAll')}
@@ -194,9 +201,11 @@ export default async function HomePage() {
         <h2 id="instructors-heading" className="font-display text-3xl tracking-tight text-foreground">
           {t('home.sections.instructors.title')}
         </h2>
-        <Suspense fallback={<div className="mt-8 h-32 animate-pulse rounded-2xl bg-surface-muted" aria-hidden="true" />}>
-          <InstructorGrid emptyTitle={t('home.sections.instructors.emptyTitle')} emptyBody={t('home.sections.instructors.emptyBody')} limit={3} />
-        </Suspense>
+        <SectionErrorBoundary>
+          <Suspense fallback={<div className="mt-8 h-32 animate-pulse rounded-2xl bg-surface-muted" aria-hidden="true" />}>
+            <InstructorGrid emptyTitle={t('home.sections.instructors.emptyTitle')} emptyBody={t('home.sections.instructors.emptyBody')} limit={3} />
+          </Suspense>
+        </SectionErrorBoundary>
         <div className="mt-6 text-center">
           <Link href="/instructors" className="text-sm font-medium text-primary hover:underline">
             {t('home.sections.instructors.viewAll')}

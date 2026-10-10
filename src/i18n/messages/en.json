@@ -332,7 +332,9 @@
     "title": "Something went wrong",
     "body": "An unexpected error interrupted this page. Trying again usually helps.",
     "retry": "Try again",
-    "home": "Back to home"
+    "home": "Back to home",
+    "sectionTitle": "This section couldn't load",
+    "sectionBody": "The rest of the page is still here — try refreshing in a moment."
   },
   "instructors": {
     "noHeadline": "Instructor at {brand}",

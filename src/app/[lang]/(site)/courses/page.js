@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import { X } from 'lucide-react';
 import CourseGrid from '@/components/sections/CourseGrid';
 import OrbitAccent from '@/components/sections/OrbitAccent';
+import SectionErrorBoundary from '@/components/ui/SectionErrorBoundary';
 import { getI18n } from '@/i18n/dictionaries';
 import { Link } from '@/i18n/navigation';
 import { languageAlternates } from '@/i18n/seo';
@@ -47,13 +48,15 @@ export default async function CoursesDirectoryPage({ searchParams }) {
           <p className="mt-4 max-w-2xl text-lg text-foreground-muted">{t('courses.directory.subtitle')}</p>
         </div>
       </div>
-      <Suspense fallback={<div className="mt-8 h-32 animate-pulse rounded-2xl bg-surface-muted" aria-hidden="true" />}>
-        <CourseListSection
-          searchParams={searchParams}
-          emptyTitle={t('home.sections.courses.emptyTitle')}
-          emptyBody={t('home.sections.courses.emptyBody')}
-        />
-      </Suspense>
+      <SectionErrorBoundary>
+        <Suspense fallback={<div className="mt-8 h-32 animate-pulse rounded-2xl bg-surface-muted" aria-hidden="true" />}>
+          <CourseListSection
+            searchParams={searchParams}
+            emptyTitle={t('home.sections.courses.emptyTitle')}
+            emptyBody={t('home.sections.courses.emptyBody')}
+          />
+        </Suspense>
+      </SectionErrorBoundary>
     </div>
   );
 }

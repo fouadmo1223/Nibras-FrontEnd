@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import InstructorProfileView from '@/components/sections/InstructorProfileView';
+import SectionErrorBoundary from '@/components/ui/SectionErrorBoundary';
 import { getInstructorProfile } from '@/services/instructors.service';
 
 // No generateStaticParams: no instructors are published yet, and Cache Components requires at
@@ -36,9 +37,11 @@ export default function InstructorProfilePage({ params }) {
         <div className="absolute -right-40 top-20 size-[36rem] rounded-full bg-[radial-gradient(closest-side,color-mix(in_oklab,var(--secondary)_18%,transparent),transparent)] blur-2xl" />
       </div>
       <div className="mx-auto w-full max-w-3xl px-4 py-16 sm:px-6 lg:px-10">
-        <Suspense fallback={<ProfileSkeleton />}>
-          <InstructorProfileView params={params} />
-        </Suspense>
+        <SectionErrorBoundary>
+          <Suspense fallback={<ProfileSkeleton />}>
+            <InstructorProfileView params={params} />
+          </Suspense>
+        </SectionErrorBoundary>
       </div>
     </div>
   );

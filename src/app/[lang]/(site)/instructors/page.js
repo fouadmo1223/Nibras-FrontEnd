@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import InstructorGrid from '@/components/sections/InstructorGrid';
 import OrbitAccent from '@/components/sections/OrbitAccent';
+import SectionErrorBoundary from '@/components/ui/SectionErrorBoundary';
 import { getI18n } from '@/i18n/dictionaries';
 import { languageAlternates } from '@/i18n/seo';
 
@@ -20,9 +21,11 @@ export default async function InstructorsDirectoryPage() {
           <p className="mt-4 max-w-2xl text-lg text-foreground-muted">{t('instructors.directory.subtitle')}</p>
         </div>
       </div>
-      <Suspense fallback={<div className="mt-8 h-32 animate-pulse rounded-2xl bg-surface-muted" aria-hidden="true" />}>
-        <InstructorGrid emptyTitle={t('home.sections.instructors.emptyTitle')} emptyBody={t('home.sections.instructors.emptyBody')} />
-      </Suspense>
+      <SectionErrorBoundary>
+        <Suspense fallback={<div className="mt-8 h-32 animate-pulse rounded-2xl bg-surface-muted" aria-hidden="true" />}>
+          <InstructorGrid emptyTitle={t('home.sections.instructors.emptyTitle')} emptyBody={t('home.sections.instructors.emptyBody')} />
+        </Suspense>
+      </SectionErrorBoundary>
     </div>
   );
 }
