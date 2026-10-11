@@ -273,6 +273,13 @@
       "resend": "Resend link",
       "sent": "Sent"
     },
+    "myCourses": {
+      "title": "My courses",
+      "description": "Courses you're enrolled in, and how far you've gotten.",
+      "loading": "Loading your courses",
+      "empty": "You haven't enrolled in a course yet.",
+      "browse": "Browse courses"
+    },
     "password": {
       "title": "Password",
       "description": "Changing it signs out your other devices.",
@@ -372,6 +379,11 @@
       "curriculum": "Curriculum",
       "lessonCount": "{count} lessons",
       "quiz": "Quiz",
+      "yourProgress": "Your progress",
+      "enroll": "Enroll for free",
+      "paymentComingSoon": "Paid enrolment isn't available yet — checkout is coming soon.",
+      "markComplete": "Mark as complete",
+      "markIncomplete": "Mark as not complete",
       "gallery": "Gallery",
       "instructor": "Your instructor",
       "category": "Category",

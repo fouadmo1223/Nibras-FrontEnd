@@ -1,14 +1,13 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import { BarChart3, BookOpen, Clapperboard, HelpCircle, Tag } from 'lucide-react';
+import { BarChart3, BookOpen, Tag } from 'lucide-react';
 import Avatar from '@/components/ui/Avatar';
 import Card from '@/components/ui/Card';
 import CoursePrice from '@/components/ui/CoursePrice';
+import CourseSyllabus from '@/components/sections/CourseSyllabus';
 import { getI18n } from '@/i18n/dictionaries';
 import { Link } from '@/i18n/navigation';
 import { getCourseBySlug } from '@/services/courses.service';
-
-const formatMinutes = (seconds) => `${Math.max(1, Math.round(seconds / 60))} min`;
 
 /** Fetches and renders one course's public page; 404s if it doesn't exist or isn't published. */
 export default async function CourseDetailView({ params }) {
@@ -22,7 +21,6 @@ export default async function CourseDetailView({ params }) {
   const categoryName = locale === 'ar' ? course.category.nameAr : course.category.nameEn;
   const instructorHeadline = locale === 'ar' ? course.instructor.headlineAr : course.instructor.headlineEn;
   const sections = course.sections ?? [];
-  const lessonCount = sections.reduce((sum, s) => sum + s.lessons.length, 0);
 
   return (
     <>
@@ -55,37 +53,7 @@ export default async function CourseDetailView({ params }) {
 
           {sections.length > 0 ? (
             <div className="mt-8">
-              <div className="flex items-baseline justify-between gap-3">
-                <h2 className="font-semibold text-foreground">{t('courses.detail.curriculum')}</h2>
-                <span className="text-sm text-foreground-subtle">{t('courses.detail.lessonCount', { count: lessonCount })}</span>
-              </div>
-              <div className="mt-3 space-y-3">
-                {sections.map((section) => {
-                  const sectionTitle = locale === 'ar' ? section.titleAr : section.titleEn;
-                  return (
-                    <Card key={section.id} variant="default" className="p-0">
-                      <h3 className="border-b border-border px-5 py-3 text-sm font-semibold text-foreground">{sectionTitle}</h3>
-                      <ul className="divide-y divide-border">
-                        {section.lessons.map((lesson) => {
-                          const lessonTitle = locale === 'ar' ? lesson.titleAr : lesson.titleEn;
-                          const Icon = lesson.type === 'QUIZ' ? HelpCircle : Clapperboard;
-                          return (
-                            <li key={lesson.id} className="flex items-center gap-3 px-5 py-3 text-sm">
-                              <Icon className="size-4 shrink-0 text-foreground-subtle" aria-hidden="true" />
-                              <span className="flex-1 text-foreground-muted">{lessonTitle}</span>
-                              {lesson.type === 'QUIZ' ? (
-                                <span className="shrink-0 text-xs font-medium text-foreground-subtle">{t('courses.detail.quiz')}</span>
-                              ) : lesson.durationSeconds ? (
-                                <span className="shrink-0 text-xs text-foreground-subtle">{formatMinutes(lesson.durationSeconds)}</span>
-                              ) : null}
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    </Card>
-                  );
-                })}
-              </div>
+              <CourseSyllabus courseId={course.id} priceCents={course.priceCents} initialSections={sections} locale={locale} />
             </div>
           ) : null}
 

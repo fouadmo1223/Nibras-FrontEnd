@@ -4,9 +4,10 @@ import { useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
 import { motion } from 'motion/react';
-import { BadgeCheck, KeyRound, MailCheck, MonitorSmartphone, Palette } from 'lucide-react';
+import { BadgeCheck, BookOpen, KeyRound, MailCheck, MonitorSmartphone, Palette } from 'lucide-react';
 import AvatarUploader from '@/components/account/AvatarUploader';
 import ChangePasswordForm from '@/components/account/ChangePasswordForm';
+import MyCoursesCard from '@/components/account/MyCoursesCard';
 import SessionsList from '@/components/account/SessionsList';
 import SignOutButton from '@/components/account/SignOutButton';
 import Alert from '@/components/ui/Alert';
@@ -152,6 +153,10 @@ export default function AccountView() {
             </motion.div>
 
             {!user.emailVerified && <VerifyBanner email={user.email} />}
+
+            <Card icon={BookOpen} title={t('account.myCourses.title')} description={t('account.myCourses.description')}>
+              <MyCoursesCard />
+            </Card>
 
             <Card icon={KeyRound} title={t('account.password.title')} description={t('account.password.description')}>
               <ChangePasswordForm />
