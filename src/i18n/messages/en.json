@@ -369,6 +369,9 @@
     },
     "detail": {
       "about": "About this course",
+      "curriculum": "Curriculum",
+      "lessonCount": "{count} lessons",
+      "quiz": "Quiz",
       "gallery": "Gallery",
       "instructor": "Your instructor",
       "category": "Category",

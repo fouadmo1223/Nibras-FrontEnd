@@ -369,6 +369,9 @@
     },
     "detail": {
       "about": "عن هذه الدورة",
+      "curriculum": "المنهج",
+      "lessonCount": "{count} درسًا",
+      "quiz": "اختبار",
       "gallery": "معرض الصور",
       "instructor": "مدرّبك",
       "category": "التصنيف",
