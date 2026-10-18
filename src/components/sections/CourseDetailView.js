@@ -3,7 +3,9 @@ import Image from 'next/image';
 import { BarChart3, BookOpen, Tag } from 'lucide-react';
 import Avatar from '@/components/ui/Avatar';
 import Card from '@/components/ui/Card';
+import CartButton from '@/components/ui/CartButton';
 import CoursePrice from '@/components/ui/CoursePrice';
+import WishlistButton from '@/components/ui/WishlistButton';
 import CourseSyllabus from '@/components/sections/CourseSyllabus';
 import { getI18n } from '@/i18n/dictionaries';
 import { Link } from '@/i18n/navigation';
@@ -74,6 +76,10 @@ export default async function CourseDetailView({ params }) {
         <div className="space-y-6 lg:sticky lg:top-24">
           <Card variant="glass" className="p-6">
             <CoursePrice priceCents={course.priceCents} compareAtPriceCents={course.compareAtPriceCents} format={format} t={t} size="lg" />
+            <div className="mt-4 flex flex-wrap gap-2">
+              <WishlistButton courseId={course.id} className="flex-1" />
+              {course.priceCents > 0 ? <CartButton courseId={course.id} priceCents={course.priceCents} className="flex-1" /> : null}
+            </div>
             <dl className="mt-5 space-y-3 border-t border-border pt-5 text-sm">
               <div className="flex items-center justify-between gap-3">
                 <dt className="flex items-center gap-2 text-foreground-muted">
