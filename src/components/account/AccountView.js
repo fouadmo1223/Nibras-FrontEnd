@@ -4,18 +4,22 @@ import { useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
 import { motion } from 'motion/react';
-import { BadgeCheck, BookOpen, KeyRound, MailCheck, MonitorSmartphone, Palette } from 'lucide-react';
+import { Award, BadgeCheck, BookOpen, ClipboardList, Heart, KeyRound, MailCheck, MonitorSmartphone, Palette, ShoppingCart } from 'lucide-react';
 import AvatarUploader from '@/components/account/AvatarUploader';
+import CartCard from '@/components/account/CartCard';
+import CertificatesCard from '@/components/account/CertificatesCard';
 import ChangePasswordForm from '@/components/account/ChangePasswordForm';
 import MyCoursesCard from '@/components/account/MyCoursesCard';
+import OrdersCard from '@/components/account/OrdersCard';
 import SessionsList from '@/components/account/SessionsList';
 import SignOutButton from '@/components/account/SignOutButton';
+import WishlistCard from '@/components/account/WishlistCard';
 import Alert from '@/components/ui/Alert';
 import Button from '@/components/ui/Button';
 import { LanguageSegmented, ThemeSegmented } from '@/components/layout/PreferenceMenus';
 import { useSession } from '@/hooks/use-auth';
 import { useI18n } from '@/i18n/I18nProvider';
-import { useLocaleRouter } from '@/i18n/navigation';
+import { Link, useLocaleRouter } from '@/i18n/navigation';
 import { errorMessage } from '@/lib/api-errors';
 import { resendVerification } from '@/services/auth.service';
 
@@ -26,17 +30,22 @@ const item = {
   show: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 260, damping: 28 } },
 };
 
-function Card({ icon: Icon, title, description, children }) {
+function Card({ icon: Icon, title, description, href, hrefLabel, children }) {
   return (
     <motion.section variants={item} className="rounded-2xl border border-border bg-surface p-6 shadow-elevation-1 sm:p-8">
       <header className="mb-6 flex items-start gap-4">
         <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-primary-soft text-primary">
           <Icon className="size-5" aria-hidden="true" />
         </span>
-        <div>
+        <div className="min-w-0 flex-1">
           <h2 className="font-semibold text-foreground">{title}</h2>
           {description && <p className="mt-0.5 text-sm text-foreground-muted">{description}</p>}
         </div>
+        {href ? (
+          <Link href={href} className="shrink-0 self-center text-sm font-medium text-primary hover:underline">
+            {hrefLabel}
+          </Link>
+        ) : null}
       </header>
       {children}
     </motion.section>
@@ -107,7 +116,7 @@ export default function AccountView() {
       {/* Soft brand light behind the header. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 h-80 bg-[radial-gradient(60%_100%_at_30%_0%,color-mix(in_oklab,var(--primary)_14%,transparent),transparent_70%)]"
+        className="pointer-events-none absolute inset-x-0 -top-[50px] h-80 bg-[radial-gradient(60%_100%_at_30%_0%,color-mix(in_oklab,var(--primary)_14%,transparent),transparent_70%)] sm:-top-[100px]"
       />
 
       <div className="relative mx-auto w-full max-w-6xl px-4 pb-24 pt-4 sm:px-6 lg:px-10">
@@ -154,8 +163,48 @@ export default function AccountView() {
 
             {!user.emailVerified && <VerifyBanner email={user.email} />}
 
-            <Card icon={BookOpen} title={t('account.myCourses.title')} description={t('account.myCourses.description')}>
+            <Card
+              icon={BookOpen}
+              title={t('account.myCourses.title')}
+              description={t('account.myCourses.description')}
+              href="/my-courses"
+              hrefLabel={t('common.viewAll')}
+            >
               <MyCoursesCard />
+            </Card>
+
+            <Card icon={Award} title={t('account.certificates.title')} description={t('account.certificates.description')}>
+              <CertificatesCard />
+            </Card>
+
+            <Card
+              icon={Heart}
+              title={t('account.wishlist.title')}
+              description={t('account.wishlist.description')}
+              href="/wishlist"
+              hrefLabel={t('common.viewAll')}
+            >
+              <WishlistCard />
+            </Card>
+
+            <Card
+              icon={ShoppingCart}
+              title={t('account.cart.title')}
+              description={t('account.cart.description')}
+              href="/cart"
+              hrefLabel={t('common.viewAll')}
+            >
+              <CartCard />
+            </Card>
+
+            <Card
+              icon={ClipboardList}
+              title={t('account.orders.title')}
+              description={t('account.orders.description')}
+              href="/orders"
+              hrefLabel={t('common.viewAll')}
+            >
+              <OrdersCard />
             </Card>
 
             <Card icon={KeyRound} title={t('account.password.title')} description={t('account.password.description')}>

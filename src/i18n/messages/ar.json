@@ -9,7 +9,11 @@
     "resetPassword": "إعادة تعيين كلمة المرور",
     "verifyEmail": "تأكيد البريد الإلكتروني",
     "notFound": "الصفحة غير موجودة",
-    "instructors": "المدرّبون"
+    "instructors": "المدرّبون",
+    "myCourses": "دوراتي",
+    "wishlist": "قائمة الرغبات",
+    "cart": "السلة",
+    "orders": "الطلبات"
   },
   "common": {
     "brandHome": "الصفحة الرئيسية لـ{brand}",
@@ -20,7 +24,8 @@
     "confirm": "تأكيد",
     "dismissNotification": "إغلاق الإشعار",
     "offline": "تعذّر الوصول إلى {brand}. تحقّق من اتصالك وحاول مرة أخرى.",
-    "genericError": "حدث خطأ ما. حاول مرة أخرى."
+    "genericError": "حدث خطأ ما. حاول مرة أخرى.",
+    "viewAll": "عرض الكل"
   },
   "nav": {
     "main": "الرئيسية",
@@ -31,7 +36,10 @@
     "accountMenu": "قائمة الحساب",
     "signedInAs": "مسجَّل الدخول باسم",
     "instructors": "المدرّبون",
-    "courses": "الدورات"
+    "courses": "الدورات",
+    "myCourses": "دوراتي",
+    "wishlist": "قائمة الرغبات",
+    "cart": "السلة"
   },
   "language": {
     "label": "اللغة",
@@ -280,6 +288,56 @@
       "empty": "لم تسجّل في أي دورة بعد.",
       "browse": "تصفّح الدورات"
     },
+    "certificates": {
+      "title": "الشهادات",
+      "description": "تُصدَر تلقائيًا بمجرد إكمالك لدورة.",
+      "loading": "جارٍ تحميل شهاداتك",
+      "empty": "أكمل دورة لتحصل على أول شهادة لك.",
+      "issuedOn": "صدرت في {date}",
+      "download": "تنزيل"
+    },
+    "wishlist": {
+      "title": "قائمة الرغبات",
+      "description": "الدورات التي حفظتها لوقت لاحق.",
+      "loading": "جارٍ تحميل قائمة رغباتك",
+      "empty": "احفظ دورة في قائمة رغباتك لتجدها هنا.",
+      "browse": "تصفّح الدورات",
+      "remove": "إزالة من قائمة الرغبات",
+      "clear": "إفراغ قائمة الرغبات",
+      "clearConfirmTitle": "إفراغ قائمة رغباتك؟",
+      "clearConfirmDescription": "سيؤدي هذا إلى إزالة كل دورة محفوظة من قائمة رغباتك. يمكنك حفظها مرة أخرى لاحقًا."
+    },
+    "cart": {
+      "title": "السلة",
+      "description": "الدورات المدفوعة التي أنت مستعد لطلبها.",
+      "loading": "جارٍ تحميل سلتك",
+      "empty": "سلتك فارغة.",
+      "browse": "تصفّح الدورات",
+      "remove": "إزالة من السلة",
+      "total": "الإجمالي",
+      "checkoutComingSoon": "إنشاء الطلب لا يخصم منك المبلغ تلقائيًا — الدفع الإلكتروني غير متاح بعد. سنتواصل معك لتحصيل الدفع وتأكيد طلبك.",
+      "placeOrder": "إنشاء الطلب",
+      "clear": "إفراغ السلة",
+      "clearConfirmTitle": "إفراغ سلتك؟",
+      "clearConfirmDescription": "سيؤدي هذا إلى إزالة كل دورة من سلتك. يمكنك إضافتها مرة أخرى لاحقًا."
+    },
+    "orders": {
+      "title": "الطلبات",
+      "description": "سجل طلباتك وحالتها.",
+      "loading": "جارٍ تحميل طلباتك",
+      "empty": "لم تنشئ أي طلب بعد.",
+      "browse": "تصفّح الدورات",
+      "placedOn": "أُنشئ في {date}",
+      "total": "الإجمالي",
+      "cancel": "إلغاء الطلب",
+      "cancelConfirmTitle": "إلغاء هذا الطلب؟",
+      "cancelConfirmDescription": "سيؤدي هذا إلى إلغاء الطلب. إذا كنت لا تزال تريد هذه الدورات، ستحتاج إلى إضافتها إلى سلتك وطلبها مرة أخرى.",
+      "status": {
+        "PENDING": "قيد الانتظار",
+        "PAID": "مدفوع",
+        "CANCELLED": "ملغى"
+      }
+    },
     "password": {
       "title": "كلمة المرور",
       "description": "تغييرها يسجّل خروجك من أجهزتك الأخرى.",
@@ -354,20 +412,54 @@
       "website": "الموقع الإلكتروني",
       "linkedin": "الملف الشخصي على لينكد إن",
       "x": "الملف الشخصي على إكس (تويتر)",
-      "view": "عرض الملف الشخصي"
+      "view": "عرض الملف الشخصي",
+      "coursesTitle": "دورات {name}",
+      "coursesEmpty": "لا توجد دورات منشورة بعد.",
+      "courseCount": {
+        "zero": "لا دورات",
+        "one": "دورة واحدة",
+        "two": "دورتان",
+        "few": "{count} دورات",
+        "many": "{count} دورة",
+        "other": "{count} دورة"
+      }
     }
   },
   "courses": {
     "directory": {
       "title": "كل الدورات",
       "subtitle": "دورات منظّمة يقدّمها مدرّبون حقيقيون. تصفّح حسب التصنيف لإيجاد مسارك.",
-      "allCategories": "كل التصنيفات"
+      "allCategories": "كل التصنيفات",
+      "allInstructors": "كل المدرّبين",
+      "category": "التصنيف",
+      "instructor": "المدرّب",
+      "price": "السعر",
+      "priceAll": "أي سعر",
+      "priceFree": "مجانية",
+      "pricePaid": "مدفوعة",
+      "level": "المستوى",
+      "levelAll": "أي مستوى",
+      "resultCount": {
+        "zero": "لا دورات",
+        "one": "دورة واحدة",
+        "two": "دورتان",
+        "few": "{count} دورات",
+        "many": "{count} دورة",
+        "other": "{count} دورة"
+      }
+    },
+    "pagination": {
+      "previous": "السابق",
+      "next": "التالي",
+      "status": "صفحة {page} من {totalPages}"
     },
     "card": {
       "free": "مجانية",
       "by": "بواسطة {name}",
       "view": "عرض الدورة",
-      "off": "خصم {percent}٪"
+      "off": "خصم {percent}٪",
+      "addToWishlist": "أضف إلى قائمة الرغبات",
+      "removeFromWishlist": "إزالة من قائمة الرغبات"
     },
     "level": {
       "BEGINNER": "مبتدئ",
@@ -382,14 +474,67 @@
       "yourProgress": "تقدّمك",
       "enroll": "سجّل مجانًا",
       "paymentComingSoon": "التسجيل المدفوع غير متاح بعد — الدفع قادم قريبًا.",
-      "markComplete": "وضع علامة مكتمل",
-      "markIncomplete": "إلغاء علامة الاكتمال",
       "gallery": "معرض الصور",
       "instructor": "مدرّبك",
       "category": "التصنيف",
       "level": "المستوى",
       "price": "السعر",
-      "viewInstructor": "عرض الملف الشخصي للمدرّب"
+      "viewInstructor": "عرض الملف الشخصي للمدرّب",
+      "watch": "مشاهدة",
+      "videoUnavailable": "لم يتم رفع فيديو هذا الدرس بعد.",
+      "certificateEarned": "لقد حصلت على شهادة — نزّلها الآن",
+      "addToWishlist": "أضف إلى قائمة الرغبات",
+      "removeFromWishlist": "إزالة من قائمة الرغبات",
+      "addToCart": "أضف إلى السلة",
+      "removeFromCart": "إزالة من السلة",
+      "wishlist": "قائمة الرغبات",
+      "wishlisted": "في القائمة",
+      "addToCartShort": "أضف إلى السلة",
+      "inCart": "في السلة"
+    },
+    "quizPanel": {
+      "notConfigured": "هذا الاختبار غير جاهز بعد.",
+      "start": "ابدأ الاختبار",
+      "submit": "إرسال الإجابات",
+      "submitStep": "إرسال",
+      "next": "التالي",
+      "back": "السابق",
+      "stepOf": "السؤال {current} من {total}",
+      "close": "إغلاق",
+      "answerAll": "أجب عن كل الأسئلة لتتمكن من الإرسال.",
+      "scoreResult": "نتيجتك {score}٪",
+      "correctCount": "{correct} من {total} إجابات صحيحة",
+      "alreadySubmitted": "لقد أرسلت هذا الاختبار بالفعل.",
+      "resultHigh": {
+        "title": "أداء رائع!",
+        "body": "لديك فهم قوي لهذه المادة. حافظ على هذا الزخم."
+      },
+      "resultMid": {
+        "title": "عمل جيد!",
+        "body": "نتيجة جيدة — مراجعة سريعة للدروس أعلاه ستُحكم الباقي."
+      },
+      "resultLow": {
+        "title": "واصل المحاولة",
+        "body": "لم تسر هذه المحطة كما ينبغي — أعد مشاهدة الدروس أعلاه، وستكون المحطة التالية أفضل."
+      },
+      "uploadLabel": "ارفع مشروعك كملف ZIP",
+      "uploadButton": "رفع",
+      "uploading": "جارٍ الرفع… {percent}٪",
+      "uploadedAt": "تم الإرسال في {date}",
+      "awaitingGrade": "بانتظار مراجعة مدرّبك.",
+      "grade": "الدرجة: {grade}٪",
+      "feedback": "الملاحظات"
+    }
+  },
+  "verify": {
+    "notFound": {
+      "title": "الشهادة غير موجودة",
+      "body": "لا يطابق هذا الرمز أي شهادة صادرة. تأكّد من الرابط أو الرمز وحاول مرة أخرى."
+    },
+    "valid": {
+      "title": "شهادة صالحة",
+      "body": "أكمل {name} دورة {course}.",
+      "issuedOn": "صدرت في {date}"
     }
   }
 }

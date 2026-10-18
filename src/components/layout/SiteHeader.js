@@ -9,10 +9,10 @@ import { splitLocale } from '@/i18n/config';
 import { useI18n } from '@/i18n/I18nProvider';
 import { Link } from '@/i18n/navigation';
 import { cn } from '@/lib/cn';
-import MobileNav from './MobileNav';
 import { isActivePath, NAV_ITEMS } from './nav-items';
 import { LanguageMenu, ThemeMenu } from './PreferenceMenus';
 import UserMenu from './UserMenu';
+import WishlistCartNavIcons from './WishlistCartNavIcons';
 
 /** Sticky site header: brand, primary navigation, language/theme menus and the account entry point. */
 export default function SiteHeader() {
@@ -77,19 +77,22 @@ export default function SiteHeader() {
           </ul>
         </nav>
 
-        <div className="ms-auto flex items-center gap-1.5">
-          <div className="hidden items-center gap-0.5 lg:flex">
+        <div className="ms-auto hidden items-center gap-1.5 lg:flex">
+          <div className="flex items-center gap-0.5">
             <LanguageMenu />
             <ThemeMenu />
           </div>
-          <span className="mx-1.5 hidden h-6 w-px bg-border lg:block" aria-hidden="true" />
+          <span className="mx-1.5 h-6 w-px bg-border" aria-hidden="true" />
 
           {session.isPending ? (
             <span className="size-9 animate-pulse rounded-full bg-surface-muted" aria-hidden="true" />
           ) : session.data ? (
-            <UserMenu user={session.data.user} />
+            <>
+              <WishlistCartNavIcons />
+              <UserMenu user={session.data.user} />
+            </>
           ) : (
-            <div className="hidden items-center gap-1.5 sm:flex">
+            <div className="flex items-center gap-1.5">
               <Link href="/login" className="inline-flex h-9 items-center rounded-lg px-3.5 text-sm font-medium text-foreground-muted hover:text-foreground">
                 {t('nav.signIn')}
               </Link>
@@ -101,7 +104,23 @@ export default function SiteHeader() {
               </Link>
             </div>
           )}
-          <MobileNav session={session.data} />
+        </div>
+
+        {/* Mobile (<lg): no hamburger drawer — a fixed bottom tab bar (MobileTabBar, in SiteLayout)
+            carries primary navigation instead. Just the avatar/sign-in stays reachable up here. */}
+        <div className="ms-auto lg:hidden">
+          {session.isPending ? (
+            <span className="size-9 animate-pulse rounded-full bg-surface-muted" aria-hidden="true" />
+          ) : session.data ? (
+            <UserMenu user={session.data.user} />
+          ) : (
+            <Link
+              href="/login"
+              className="inline-flex h-9 items-center rounded-lg bg-primary px-3.5 text-sm font-medium text-primary-foreground shadow-elevation-1"
+            >
+              {t('nav.signIn')}
+            </Link>
+          )}
         </div>
       </div>
     </header>

@@ -9,7 +9,11 @@
     "resetPassword": "Reset password",
     "verifyEmail": "Confirm your email",
     "notFound": "Page not found",
-    "instructors": "Instructors"
+    "instructors": "Instructors",
+    "myCourses": "My courses",
+    "wishlist": "Wishlist",
+    "cart": "Cart",
+    "orders": "Orders"
   },
   "common": {
     "brandHome": "{brand} home",
@@ -20,7 +24,8 @@
     "confirm": "Confirm",
     "dismissNotification": "Dismiss notification",
     "offline": "We couldn’t reach {brand}. Check your connection and try again.",
-    "genericError": "Something went wrong. Please try again."
+    "genericError": "Something went wrong. Please try again.",
+    "viewAll": "View all"
   },
   "nav": {
     "main": "Main",
@@ -31,7 +36,10 @@
     "accountMenu": "Account menu",
     "signedInAs": "Signed in as",
     "instructors": "Instructors",
-    "courses": "Courses"
+    "courses": "Courses",
+    "myCourses": "My courses",
+    "wishlist": "Wishlist",
+    "cart": "Cart"
   },
   "language": {
     "label": "Language",
@@ -280,6 +288,56 @@
       "empty": "You haven't enrolled in a course yet.",
       "browse": "Browse courses"
     },
+    "certificates": {
+      "title": "Certificates",
+      "description": "Issued automatically the moment you complete a course.",
+      "loading": "Loading your certificates",
+      "empty": "Complete a course to earn your first certificate.",
+      "issuedOn": "Issued {date}",
+      "download": "Download"
+    },
+    "wishlist": {
+      "title": "Wishlist",
+      "description": "Courses you've saved for later.",
+      "loading": "Loading your wishlist",
+      "empty": "Save a course to your wishlist to find it here.",
+      "browse": "Browse courses",
+      "remove": "Remove from wishlist",
+      "clear": "Clear wishlist",
+      "clearConfirmTitle": "Clear your wishlist?",
+      "clearConfirmDescription": "This removes every saved course from your wishlist. You can always save them again later."
+    },
+    "cart": {
+      "title": "Cart",
+      "description": "Paid courses you're ready to order.",
+      "loading": "Loading your cart",
+      "empty": "Your cart is empty.",
+      "browse": "Browse courses",
+      "remove": "Remove from cart",
+      "total": "Total",
+      "checkoutComingSoon": "Placing an order doesn't charge you automatically — online payment isn't live yet. We'll follow up to collect payment and confirm your order.",
+      "placeOrder": "Place order",
+      "clear": "Clear cart",
+      "clearConfirmTitle": "Clear your cart?",
+      "clearConfirmDescription": "This removes every course from your cart. You can always add them again later."
+    },
+    "orders": {
+      "title": "Orders",
+      "description": "Your order history and their status.",
+      "loading": "Loading your orders",
+      "empty": "You haven't placed an order yet.",
+      "browse": "Browse courses",
+      "placedOn": "Placed {date}",
+      "total": "Total",
+      "cancel": "Cancel order",
+      "cancelConfirmTitle": "Cancel this order?",
+      "cancelConfirmDescription": "This cancels the order. If you still want these courses, you'll need to add them to your cart and order again.",
+      "status": {
+        "PENDING": "Pending",
+        "PAID": "Paid",
+        "CANCELLED": "Cancelled"
+      }
+    },
     "password": {
       "title": "Password",
       "description": "Changing it signs out your other devices.",
@@ -354,20 +412,54 @@
       "website": "Website",
       "linkedin": "LinkedIn profile",
       "x": "X (Twitter) profile",
-      "view": "View profile"
+      "view": "View profile",
+      "coursesTitle": "Courses by {name}",
+      "coursesEmpty": "No published courses yet.",
+      "courseCount": {
+        "zero": "{count} courses",
+        "one": "{count} course",
+        "two": "{count} courses",
+        "few": "{count} courses",
+        "many": "{count} courses",
+        "other": "{count} courses"
+      }
     }
   },
   "courses": {
     "directory": {
       "title": "All courses",
       "subtitle": "Structured courses taught by real instructors. Browse by category to find your path.",
-      "allCategories": "All categories"
+      "allCategories": "All categories",
+      "allInstructors": "All instructors",
+      "category": "Category",
+      "instructor": "Instructor",
+      "price": "Price",
+      "priceAll": "Any price",
+      "priceFree": "Free",
+      "pricePaid": "Paid",
+      "level": "Level",
+      "levelAll": "Any level",
+      "resultCount": {
+        "zero": "{count} courses",
+        "one": "{count} course",
+        "two": "{count} courses",
+        "few": "{count} courses",
+        "many": "{count} courses",
+        "other": "{count} courses"
+      }
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "status": "Page {page} of {totalPages}"
     },
     "card": {
       "free": "Free",
       "by": "By {name}",
       "view": "View course",
-      "off": "-{percent}%"
+      "off": "-{percent}%",
+      "addToWishlist": "Add to wishlist",
+      "removeFromWishlist": "Remove from wishlist"
     },
     "level": {
       "BEGINNER": "Beginner",
@@ -382,14 +474,67 @@
       "yourProgress": "Your progress",
       "enroll": "Enroll for free",
       "paymentComingSoon": "Paid enrolment isn't available yet — checkout is coming soon.",
-      "markComplete": "Mark as complete",
-      "markIncomplete": "Mark as not complete",
       "gallery": "Gallery",
       "instructor": "Your instructor",
       "category": "Category",
       "level": "Level",
       "price": "Price",
-      "viewInstructor": "View instructor profile"
+      "viewInstructor": "View instructor profile",
+      "watch": "Watch",
+      "videoUnavailable": "This lesson's video isn't uploaded yet.",
+      "certificateEarned": "You've earned a certificate — download it",
+      "addToWishlist": "Add to wishlist",
+      "removeFromWishlist": "Remove from wishlist",
+      "addToCart": "Add to cart",
+      "removeFromCart": "Remove from cart",
+      "wishlist": "Wishlist",
+      "wishlisted": "Wishlisted",
+      "addToCartShort": "Add to cart",
+      "inCart": "In cart"
+    },
+    "quizPanel": {
+      "notConfigured": "This quiz isn't ready yet.",
+      "start": "Start quiz",
+      "submit": "Submit answers",
+      "submitStep": "Submit",
+      "next": "Next",
+      "back": "Back",
+      "stepOf": "Question {current} of {total}",
+      "close": "Close",
+      "answerAll": "Answer every question to submit.",
+      "scoreResult": "You scored {score}%",
+      "correctCount": "{correct} of {total} correct",
+      "alreadySubmitted": "You've already submitted this quiz.",
+      "resultHigh": {
+        "title": "Outstanding!",
+        "body": "You've got a strong grasp of this material. Keep that momentum going."
+      },
+      "resultMid": {
+        "title": "Nice work!",
+        "body": "Solid result — a quick review of the lessons above will tighten up the rest."
+      },
+      "resultLow": {
+        "title": "Keep at it",
+        "body": "This one didn't quite land — rewatch the lessons above and the next checkpoint will go better."
+      },
+      "uploadLabel": "Upload your project as a .zip file",
+      "uploadButton": "Upload",
+      "uploading": "Uploading… {percent}%",
+      "uploadedAt": "Submitted {date}",
+      "awaitingGrade": "Awaiting your instructor's review.",
+      "grade": "Grade: {grade}%",
+      "feedback": "Feedback"
+    }
+  },
+  "verify": {
+    "notFound": {
+      "title": "Certificate not found",
+      "body": "This code doesn't match any issued certificate. Double-check the link or code and try again."
+    },
+    "valid": {
+      "title": "Valid certificate",
+      "body": "{name} completed {course}.",
+      "issuedOn": "Issued {date}"
     }
   }
 }

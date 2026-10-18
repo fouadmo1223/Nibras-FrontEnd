@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import MobileTabBar from '@/components/layout/MobileTabBar';
 import SiteFooter from '@/components/layout/SiteFooter';
 import SiteHeader from '@/components/layout/SiteHeader';
 
@@ -18,11 +19,14 @@ export default function SiteLayout({ children }) {
       <Suspense fallback={null}>
         <SiteHeader />
       </Suspense>
-      <main id="main" tabIndex={-1} className="flex flex-1 flex-col pt-24 outline-none">
+      <main id="main" tabIndex={-1} className="flex flex-1 flex-col pt-24 pb-20 outline-none lg:pb-0">
         {children}
       </main>
       <Suspense fallback={null}>
         <SiteFooter />
+      </Suspense>
+      <Suspense fallback={null}>
+        <MobileTabBar />
       </Suspense>
     </>
   );
