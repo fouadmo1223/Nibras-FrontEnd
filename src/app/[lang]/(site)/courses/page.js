@@ -1,39 +1,25 @@
 import { Suspense } from 'react';
-import { X } from 'lucide-react';
-import CourseGrid from '@/components/sections/CourseGrid';
+import CourseResults from '@/components/sections/CourseResults';
 import OrbitAccent from '@/components/sections/OrbitAccent';
 import SectionErrorBoundary from '@/components/ui/SectionErrorBoundary';
 import { getI18n } from '@/i18n/dictionaries';
-import { Link } from '@/i18n/navigation';
 import { languageAlternates } from '@/i18n/seo';
-import { getPublishedCategories } from '@/services/categories.service';
 
 export async function generateMetadata() {
   const { t, locale } = await getI18n();
   return { title: t('courses.directory.title'), alternates: languageAlternates(locale, '/courses') };
 }
 
-/** Reads `?category=` (URL data, so it must stay behind Suspense) and resolves it to a name. */
-async function CourseListSection({ searchParams, emptyTitle, emptyBody }) {
-  const { category } = await searchParams;
-  const [{ locale, t }, categories] = await Promise.all([getI18n(), getPublishedCategories()]);
-  const activeCategory = category ? categories.find((c) => c.slug === category) : null;
-  const activeCategoryName = activeCategory ? (locale === 'ar' ? activeCategory.nameAr : activeCategory.nameEn) : null;
-
+function ResultsSkeleton() {
   return (
-    <>
-      {activeCategoryName ? (
-        <div className="mt-6 flex items-center gap-2">
-          <span className="inline-flex items-center gap-2 rounded-lg bg-primary-soft px-3 py-1.5 text-sm font-medium text-primary">
-            {activeCategoryName}
-            <Link href="/courses" aria-label={t('courses.directory.allCategories')} className="rounded-full hover:text-primary-hover">
-              <X className="size-3.5" aria-hidden="true" />
-            </Link>
-          </span>
-        </div>
-      ) : null}
-      <CourseGrid emptyTitle={emptyTitle} emptyBody={emptyBody} category={activeCategory ? category : undefined} />
-    </>
+    <div aria-hidden="true">
+      <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {[0, 1, 2, 3].map((i) => (
+          <div key={i} className="h-10 animate-pulse rounded-md bg-surface-muted" />
+        ))}
+      </div>
+      <div className="mt-8 h-32 animate-pulse rounded-2xl bg-surface-muted" />
+    </div>
   );
 }
 
@@ -49,8 +35,8 @@ export default async function CoursesDirectoryPage({ searchParams }) {
         </div>
       </div>
       <SectionErrorBoundary>
-        <Suspense fallback={<div className="mt-8 h-32 animate-pulse rounded-2xl bg-surface-muted" aria-hidden="true" />}>
-          <CourseListSection
+        <Suspense fallback={<ResultsSkeleton />}>
+          <CourseResults
             searchParams={searchParams}
             emptyTitle={t('home.sections.courses.emptyTitle')}
             emptyBody={t('home.sections.courses.emptyBody')}

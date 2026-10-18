@@ -1,9 +1,15 @@
 import { apiRequest } from '@/lib/api-client';
 
-/** Published courses, optionally narrowed to one category. Server-side only; public data. */
-export async function getPublishedCourses({ category } = {}) {
-  const { data } = await apiRequest('/courses', { cache: 'no-store', query: category ? { category } : undefined });
-  return data;
+/**
+ * Published courses, filterable by category, instructor, price ('free'|'paid') and level, paged.
+ * Server-side only; public data. Returns `{ items, pagination }`.
+ */
+export async function getPublishedCourses({ category, instructorId, price, level, page, limit } = {}) {
+  const { data, meta } = await apiRequest('/courses', {
+    cache: 'no-store',
+    query: { category, instructorId, price, level, page, limit },
+  });
+  return { items: data, pagination: meta.pagination };
 }
 
 /** A single published course by slug, or null if it doesn't exist or isn't published. */
