@@ -8,5 +8,5 @@ export const orderKeys = {
 
 export const listMyOrders = () => apiRequest('/orders/mine').then((r) => r.data);
 export const getMyOrder = (id) => apiRequest(`/orders/mine/${id}`).then((r) => r.data);
-export const placeOrder = () => apiRequest('/orders', { method: 'POST' });
+export const placeOrder = (couponCode) => apiRequest('/orders', { method: 'POST', body: couponCode ? { couponCode } : undefined });
 export const cancelMyOrder = (id) => apiRequest(`/orders/mine/${id}/cancel`, { method: 'PATCH' });

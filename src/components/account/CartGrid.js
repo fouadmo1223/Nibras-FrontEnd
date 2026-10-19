@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { BookOpen, ClipboardCheck, ShoppingCart, Trash2, X } from 'lucide-react';
+import { BookOpen, ClipboardCheck, ShoppingCart, Tag, Trash2, X } from 'lucide-react';
 import Alert from '@/components/ui/Alert';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
@@ -13,6 +13,7 @@ import { useI18n } from '@/i18n/I18nProvider';
 import { Link, useLocaleRouter } from '@/i18n/navigation';
 import { errorMessage } from '@/lib/api-errors';
 import { cartKeys, clearCart, listMyCart, removeFromCart } from '@/services/cart.service';
+import { validateCoupon } from '@/services/coupons.service';
 import { orderKeys, placeOrder } from '@/services/orders.service';
 import { toast } from '@/stores/toast-store';
 
@@ -59,9 +60,11 @@ export default function CartGrid() {
   const cart = useQuery({ queryKey: cartKeys.mine(), queryFn: listMyCart });
   const rows = cart.data?.items ?? [];
   const [confirmingClear, setConfirmingClear] = useState(false);
+  const [couponInput, setCouponInput] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
 
   const place = useMutation({
-    mutationFn: placeOrder,
+    mutationFn: () => placeOrder(appliedCoupon?.couponCode),
     onSuccess: (result) => {
       toast.success(result.message);
       queryClient.invalidateQueries({ queryKey: cartKeys.mine() });
@@ -76,6 +79,7 @@ export default function CartGrid() {
     onSuccess: (result) => {
       toast.success(result.message);
       queryClient.invalidateQueries({ queryKey: cartKeys.mine() });
+      setAppliedCoupon(null);
     },
     onError: (error) => toast.error(errorMessage(error, t)),
   });
@@ -86,7 +90,14 @@ export default function CartGrid() {
       toast.success(result.message);
       queryClient.invalidateQueries({ queryKey: cartKeys.mine() });
       setConfirmingClear(false);
+      setAppliedCoupon(null);
     },
+    onError: (error) => toast.error(errorMessage(error, t)),
+  });
+
+  const applyCoupon = useMutation({
+    mutationFn: () => validateCoupon(couponInput.trim()),
+    onSuccess: (data) => setAppliedCoupon(data),
     onError: (error) => toast.error(errorMessage(error, t)),
   });
 
@@ -138,9 +149,60 @@ export default function CartGrid() {
         ))}
       </div>
       <div className="mt-6 rounded-2xl border border-border bg-surface p-5">
-        <div className="flex items-center justify-between">
+        {appliedCoupon ? (
+          <div className="mb-4 flex items-center justify-between gap-3 rounded-lg bg-success-soft px-3.5 py-2.5 text-sm">
+            <span className="flex items-center gap-2 font-medium text-success">
+              <Tag className="size-4 shrink-0" aria-hidden="true" />
+              {t('account.cart.couponApplied', { code: appliedCoupon.couponCode })}
+            </span>
+            <button
+              type="button"
+              onClick={() => {
+                setAppliedCoupon(null);
+                setCouponInput('');
+              }}
+              className="shrink-0 font-medium text-success underline-offset-2 hover:underline"
+            >
+              {t('account.cart.couponRemove')}
+            </button>
+          </div>
+        ) : (
+          <div className="mb-4 flex gap-2">
+            <input
+              dir="ltr"
+              value={couponInput}
+              onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
+              placeholder={t('account.cart.couponPlaceholder')}
+              className="h-10 min-w-0 flex-1 rounded-lg border border-border-strong bg-surface px-3 text-sm uppercase text-foreground placeholder:normal-case placeholder:text-foreground-subtle outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            />
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              loading={applyCoupon.isPending}
+              disabled={!couponInput.trim()}
+              onClick={() => applyCoupon.mutate()}
+            >
+              {t('account.cart.couponApply')}
+            </Button>
+          </div>
+        )}
+
+        <div className="flex items-center justify-between text-sm">
+          <span className="text-foreground-muted">{t('account.cart.subtotal')}</span>
+          <span className="text-foreground">{format.currency(cart.data.totalCents / 100)}</span>
+        </div>
+        {appliedCoupon ? (
+          <div className="mt-1.5 flex items-center justify-between text-sm">
+            <span className="text-foreground-muted">{t('account.cart.discount')}</span>
+            <span className="text-success">−{format.currency(appliedCoupon.discountCents / 100)}</span>
+          </div>
+        ) : null}
+        <div className="mt-2 flex items-center justify-between border-t border-border pt-2">
           <span className="font-medium text-foreground">{t('account.cart.total')}</span>
-          <span className="text-xl font-semibold text-foreground">{format.currency(cart.data.totalCents / 100)}</span>
+          <span className="text-xl font-semibold text-foreground">
+            {format.currency(Math.max(0, cart.data.totalCents - (appliedCoupon?.discountCents ?? 0)) / 100)}
+          </span>
         </div>
         <Button className="mt-4 w-full" loading={place.isPending} onClick={() => place.mutate()}>
           <ClipboardCheck className="size-4" aria-hidden="true" />

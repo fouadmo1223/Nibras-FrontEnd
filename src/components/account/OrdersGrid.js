@@ -44,9 +44,23 @@ function OrderCard({ order, locale, format, t, onCancel, cancelling }) {
           );
         })}
       </ul>
-      <div className="mt-3 flex items-center justify-between border-t border-border pt-3 text-sm">
-        <span className="font-medium text-foreground">{t('account.orders.total')}</span>
-        <span className="font-semibold text-foreground">{format.currency(order.totalCents / 100)}</span>
+      <div className="mt-3 border-t border-border pt-3 text-sm">
+        {order.discountCents > 0 ? (
+          <>
+            <div className="flex items-center justify-between text-foreground-subtle">
+              <span>{t('account.orders.subtotal')}</span>
+              <span>{format.currency(order.subtotalCents / 100)}</span>
+            </div>
+            <div className="mt-1 flex items-center justify-between text-success">
+              <span>{t('account.orders.discount', { code: order.couponCode })}</span>
+              <span>−{format.currency(order.discountCents / 100)}</span>
+            </div>
+          </>
+        ) : null}
+        <div className="mt-1 flex items-center justify-between">
+          <span className="font-medium text-foreground">{t('account.orders.total')}</span>
+          <span className="font-semibold text-foreground">{format.currency(order.totalCents / 100)}</span>
+        </div>
       </div>
       {order.status === 'PENDING' && (
         <button
