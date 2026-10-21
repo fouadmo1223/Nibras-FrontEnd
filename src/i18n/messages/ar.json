@@ -39,7 +39,14 @@
     "courses": "الدورات",
     "myCourses": "دوراتي",
     "wishlist": "قائمة الرغبات",
-    "cart": "السلة"
+    "cart": "السلة",
+    "notifications": "الإشعارات"
+  },
+  "notifications": {
+    "title": "الإشعارات",
+    "markAllRead": "تمييز الكل كمقروء",
+    "empty": "لا توجد إشعارات بعد.",
+    "unreadBadge": "الإشعارات، {count} غير مقروء"
   },
   "language": {
     "label": "اللغة",

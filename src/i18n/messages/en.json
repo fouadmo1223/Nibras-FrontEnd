@@ -39,7 +39,14 @@
     "courses": "Courses",
     "myCourses": "My courses",
     "wishlist": "Wishlist",
-    "cart": "Cart"
+    "cart": "Cart",
+    "notifications": "Notifications"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Mark all read",
+    "empty": "No notifications yet.",
+    "unreadBadge": "Notifications, {count} unread"
   },
   "language": {
     "label": "Language",

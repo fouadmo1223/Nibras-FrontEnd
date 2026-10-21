@@ -10,6 +10,7 @@ import { useI18n } from '@/i18n/I18nProvider';
 import { Link } from '@/i18n/navigation';
 import { cn } from '@/lib/cn';
 import { isActivePath, NAV_ITEMS } from './nav-items';
+import NotificationBell from './NotificationBell';
 import { LanguageMenu, ThemeMenu } from './PreferenceMenus';
 import UserMenu from './UserMenu';
 import WishlistCartNavIcons from './WishlistCartNavIcons';
@@ -89,6 +90,7 @@ export default function SiteHeader() {
           ) : session.data ? (
             <>
               <WishlistCartNavIcons />
+              <NotificationBell />
               <UserMenu user={session.data.user} />
             </>
           ) : (
