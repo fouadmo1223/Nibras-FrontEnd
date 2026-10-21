@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import Image from 'next/image';
-import { ArrowRight, Award, GraduationCap, MessageCircleHeart, Sparkles, Tags, TrendingUp } from 'lucide-react';
+import { ArrowRight, Award, GraduationCap, Sparkles, Tags, TrendingUp } from 'lucide-react';
 import CategoryGrid from '@/components/sections/CategoryGrid';
 import CourseGrid from '@/components/sections/CourseGrid';
 import GsapReveal from '@/components/motion/GsapReveal';
@@ -10,6 +10,7 @@ import Journey from '@/components/sections/Journey';
 import OrbitAccent from '@/components/sections/OrbitAccent';
 import TiltObjects from '@/components/sections/TiltObjects';
 import HomeStats, { HomeStatsSkeleton } from '@/components/sections/HomeStats';
+import TestimonialsGrid from '@/components/sections/TestimonialsGrid';
 import SectionErrorBoundary from '@/components/ui/SectionErrorBoundary';
 import { STOCK_IMAGES, unsplashUrl } from '@/constants/stock-images';
 import { getI18n } from '@/i18n/dictionaries';
@@ -217,7 +218,11 @@ export default async function HomePage() {
         <h2 id="testimonials-heading" className="font-display text-3xl tracking-tight text-foreground">
           {t('home.sections.testimonials.title')}
         </h2>
-        <EmptyState icon={MessageCircleHeart} title={t('home.sections.testimonials.emptyTitle')} body={t('home.sections.testimonials.emptyBody')} />
+        <SectionErrorBoundary>
+          <Suspense fallback={<div className="mt-8 h-32 animate-pulse rounded-2xl bg-surface-muted" aria-hidden="true" />}>
+            <TestimonialsGrid emptyTitle={t('home.sections.testimonials.emptyTitle')} emptyBody={t('home.sections.testimonials.emptyBody')} />
+          </Suspense>
+        </SectionErrorBoundary>
       </section>
 
       <section aria-labelledby="pricing-heading" className="mx-auto w-full max-w-6xl px-4 pb-24 sm:px-6 lg:px-10">

@@ -6,6 +6,8 @@ import Card from '@/components/ui/Card';
 import CartButton from '@/components/ui/CartButton';
 import CoursePrice from '@/components/ui/CoursePrice';
 import WishlistButton from '@/components/ui/WishlistButton';
+import CourseDiscussion from '@/components/sections/CourseDiscussion';
+import CourseReviews from '@/components/sections/CourseReviews';
 import CourseSyllabus from '@/components/sections/CourseSyllabus';
 import { getI18n } from '@/i18n/dictionaries';
 import { Link } from '@/i18n/navigation';
@@ -71,6 +73,9 @@ export default async function CourseDetailView({ params }) {
               </div>
             </div>
           ) : null}
+
+          <CourseReviews courseId={course.id} />
+          <CourseDiscussion courseId={course.id} />
         </div>
 
         <div className="space-y-6 lg:sticky lg:top-24">

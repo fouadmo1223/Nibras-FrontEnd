@@ -115,7 +115,9 @@
       "testimonials": {
         "title": "What learners say",
         "emptyTitle": "No reviews yet",
-        "emptyBody": "Reviews from learners appear here after they complete a course. We only show real feedback."
+        "emptyBody": "Reviews from learners appear here after they complete a course. We only show real feedback.",
+        "previous": "Previous testimonials",
+        "next": "Next testimonials"
       },
       "pricing": {
         "title": "Simple plans",
@@ -499,6 +501,27 @@
       "wishlisted": "Wishlisted",
       "addToCartShort": "Add to cart",
       "inCart": "In cart"
+    },
+    "reviews": {
+      "title": "Reviews",
+      "summary": "{average} average · {count} reviews",
+      "empty": "No reviews yet.",
+      "leaveOne": "Leave a review",
+      "editYours": "Your review",
+      "commentPlaceholder": "What did you think of this course? (optional)",
+      "update": "Update review",
+      "submit": "Submit review",
+      "remove": "Remove",
+      "signInToReview": "Sign in to leave a review"
+    },
+    "discussion": {
+      "title": "Discussion",
+      "signIn": "Sign in to join the discussion",
+      "locked": "Enroll in this course to join the discussion.",
+      "placeholder": "Ask a question or share something with the class…",
+      "post": "Post",
+      "empty": "No messages yet — be the first to post.",
+      "remove": "Remove message"
     },
     "quizPanel": {
       "notConfigured": "This quiz isn't ready yet.",
