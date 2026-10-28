@@ -2,14 +2,14 @@
 
 import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { ClipboardList, X } from 'lucide-react';
+import { ClipboardList, CreditCard, X } from 'lucide-react';
 import Alert from '@/components/ui/Alert';
 import Card from '@/components/ui/Card';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
 import { useI18n } from '@/i18n/I18nProvider';
 import { Link } from '@/i18n/navigation';
 import { errorMessage } from '@/lib/api-errors';
-import { cancelMyOrder, listMyOrders, orderKeys } from '@/services/orders.service';
+import { cancelMyOrder, listMyOrders, orderKeys, startCheckout } from '@/services/orders.service';
 import { toast } from '@/stores/toast-store';
 
 const STATUS_TONE = {
@@ -18,7 +18,7 @@ const STATUS_TONE = {
   CANCELLED: 'bg-error-soft text-error',
 };
 
-function OrderCard({ order, locale, format, t, onCancel, cancelling }) {
+function OrderCard({ order, locale, format, t, onCancel, cancelling, onPayNow, payingNow }) {
   return (
     <Card variant="glass" className="flex flex-col p-5">
       <div className="flex items-start justify-between gap-3">
@@ -63,21 +63,32 @@ function OrderCard({ order, locale, format, t, onCancel, cancelling }) {
         </div>
       </div>
       {order.status === 'PENDING' && (
-        <button
-          type="button"
-          onClick={() => onCancel(order.id)}
-          disabled={cancelling}
-          className="mt-3 inline-flex items-center justify-center gap-2 self-start rounded-md border border-border-strong px-3 py-1.5 text-sm font-medium text-foreground-muted transition-colors hover:border-error/30 hover:bg-error-soft hover:text-error disabled:opacity-60"
-        >
-          <X className="size-4" aria-hidden="true" />
-          {t('account.orders.cancel')}
-        </button>
+        <div className="mt-3 flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={() => onPayNow(order.id)}
+            disabled={payingNow}
+            className="inline-flex items-center justify-center gap-2 self-start rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover disabled:opacity-60"
+          >
+            <CreditCard className="size-4" aria-hidden="true" />
+            {t('account.orders.payNow')}
+          </button>
+          <button
+            type="button"
+            onClick={() => onCancel(order.id)}
+            disabled={cancelling}
+            className="inline-flex items-center justify-center gap-2 self-start rounded-md border border-border-strong px-3 py-1.5 text-sm font-medium text-foreground-muted transition-colors hover:border-error/30 hover:bg-error-soft hover:text-error disabled:opacity-60"
+          >
+            <X className="size-4" aria-hidden="true" />
+            {t('account.orders.cancel')}
+          </button>
+        </div>
       )}
     </Card>
   );
 }
 
-/** The full order history as a grid of cards, each cancellable while still PENDING. */
+/** The full order history as a grid of cards; a still-PENDING order can be paid (Stripe) or cancelled. */
 export default function OrdersGrid() {
   const { t, locale, format } = useI18n();
   const queryClient = useQueryClient();
@@ -91,6 +102,14 @@ export default function OrdersGrid() {
       toast.success(result.message);
       queryClient.invalidateQueries({ queryKey: orderKeys.mine() });
       setCancellingId(null);
+    },
+    onError: (error) => toast.error(errorMessage(error, t)),
+  });
+
+  const payNow = useMutation({
+    mutationFn: (id) => startCheckout(id, locale),
+    onSuccess: ({ url }) => {
+      window.location.href = url;
     },
     onError: (error) => toast.error(errorMessage(error, t)),
   });
@@ -133,6 +152,8 @@ export default function OrdersGrid() {
             t={t}
             onCancel={setCancellingId}
             cancelling={cancel.isPending && cancel.variables === order.id}
+            onPayNow={(id) => payNow.mutate(id)}
+            payingNow={payNow.isPending && payNow.variables === order.id}
           />
         ))}
       </div>

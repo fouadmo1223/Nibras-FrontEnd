@@ -9,7 +9,7 @@ import { errorMessage } from '@/lib/api-errors';
 import { cartKeys, listMyCart, removeFromCart } from '@/services/cart.service';
 import { toast } from '@/stores/toast-store';
 
-/** The signed-in user's cart — paid courses they intend to buy once checkout ships. */
+/** The signed-in user's cart — paid courses they intend to buy. Checkout itself happens on the full `/cart` page. */
 export default function CartCard() {
   const { t, locale, format } = useI18n();
   const queryClient = useQueryClient();
@@ -83,7 +83,9 @@ export default function CartCard() {
         <span className="font-medium text-foreground">{t('account.cart.total')}</span>
         <span className="font-semibold text-foreground">{format.currency(cart.data.totalCents / 100)}</span>
       </div>
-      <p className="mt-2 text-xs text-foreground-subtle">{t('account.cart.checkoutComingSoon')}</p>
+      <Link href="/cart" className="mt-3 inline-block text-sm font-medium text-primary hover:underline">
+        {t('account.cart.goToCart')}
+      </Link>
     </div>
   );
 }

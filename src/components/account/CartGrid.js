@@ -14,7 +14,7 @@ import { Link, useLocaleRouter } from '@/i18n/navigation';
 import { errorMessage } from '@/lib/api-errors';
 import { cartKeys, clearCart, listMyCart, removeFromCart } from '@/services/cart.service';
 import { validateCoupon } from '@/services/coupons.service';
-import { orderKeys, placeOrder } from '@/services/orders.service';
+import { orderKeys, placeOrder, startCheckout } from '@/services/orders.service';
 import { toast } from '@/stores/toast-store';
 
 /** One cart item: cover, title, price and an explicit remove button. */
@@ -63,15 +63,33 @@ export default function CartGrid() {
   const [couponInput, setCouponInput] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState(null);
 
+  // Places the order, then immediately starts a real Stripe Checkout for it. If placing the
+  // order itself fails, nothing changed — stay on the cart. If the order was placed but starting
+  // checkout failed (e.g. Stripe briefly unavailable), the order is real and still pending, so
+  // send the learner to the Orders list instead, which has its own "Pay now" retry button.
   const place = useMutation({
-    mutationFn: () => placeOrder(appliedCoupon?.couponCode),
-    onSuccess: (result) => {
-      toast.success(result.message);
+    mutationFn: async () => {
+      const placed = await placeOrder(appliedCoupon?.couponCode);
+      try {
+        return await startCheckout(placed.data.id, locale);
+      } catch (checkoutError) {
+        checkoutError.orderWasPlaced = true;
+        throw checkoutError;
+      }
+    },
+    onSuccess: ({ url }) => {
       queryClient.invalidateQueries({ queryKey: cartKeys.mine() });
       queryClient.invalidateQueries({ queryKey: orderKeys.mine() });
-      router.push('/orders');
+      window.location.href = url;
     },
-    onError: (error) => toast.error(errorMessage(error, t)),
+    onError: (error) => {
+      toast.error(errorMessage(error, t));
+      if (error.orderWasPlaced) {
+        queryClient.invalidateQueries({ queryKey: cartKeys.mine() });
+        queryClient.invalidateQueries({ queryKey: orderKeys.mine() });
+        router.push('/orders');
+      }
+    },
   });
 
   const remove = useMutation({
@@ -206,9 +224,9 @@ export default function CartGrid() {
         </div>
         <Button className="mt-4 w-full" loading={place.isPending} onClick={() => place.mutate()}>
           <ClipboardCheck className="size-4" aria-hidden="true" />
-          {t('account.cart.placeOrder')}
+          {t('account.cart.payNow')}
         </Button>
-        <p className="mt-3 text-sm text-foreground-subtle">{t('account.cart.checkoutComingSoon')}</p>
+        <p className="mt-3 text-sm text-foreground-subtle">{t('account.cart.payNowHint')}</p>
       </div>
       <ConfirmDialog
         open={confirmingClear}
