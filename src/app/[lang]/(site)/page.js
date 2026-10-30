@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import Image from 'next/image';
-import { ArrowRight, Award, GraduationCap, Sparkles, Tags, TrendingUp } from 'lucide-react';
+import { ArrowRight, Award, GraduationCap, Sparkles, TrendingUp } from 'lucide-react';
 import CategoryGrid from '@/components/sections/CategoryGrid';
 import CourseGrid from '@/components/sections/CourseGrid';
 import GsapReveal from '@/components/motion/GsapReveal';
@@ -225,12 +225,6 @@ export default async function HomePage() {
         </SectionErrorBoundary>
       </section>
 
-      <section aria-labelledby="pricing-heading" className="mx-auto w-full max-w-6xl px-4 pb-24 sm:px-6 lg:px-10">
-        <h2 id="pricing-heading" className="font-display text-3xl tracking-tight text-foreground">
-          {t('home.sections.pricing.title')}
-        </h2>
-        <EmptyState icon={Tags} title={t('home.sections.pricing.emptyTitle')} body={t('home.sections.pricing.emptyBody')} />
-      </section>
 
       <GsapReveal
         as="section"
@@ -262,16 +256,3 @@ export default async function HomePage() {
   );
 }
 
-function EmptyState({ icon: Icon, title, body }) {
-  return (
-    <div className="mt-8 flex flex-col items-center rounded-2xl border border-dashed border-border-strong bg-surface/70 p-10 text-center backdrop-blur-sm transition-colors duration-300 hover:border-primary/40">
-      {Icon ? (
-        <span className="mb-4 grid size-12 place-items-center rounded-xl bg-primary-soft text-primary">
-          <Icon className="size-6" aria-hidden="true" />
-        </span>
-      ) : null}
-      <p className="font-medium text-foreground">{title}</p>
-      <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-foreground-muted">{body}</p>
-    </div>
-  );
-}

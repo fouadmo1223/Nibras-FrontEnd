@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { MessageSquareText, Star, Trash2 } from 'lucide-react';
+import { MessageSquareText, Pencil, Star, Trash2 } from 'lucide-react';
 import Avatar from '@/components/ui/Avatar';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
@@ -36,11 +36,15 @@ function Stars({ value, size = 'size-4', onHover, onPick, interactive = false })
   );
 }
 
-// Keyed by `existing?.id ?? 'new'` from the parent, so this remounts (fresh initial state) the
-// moment the caller's own review finishes loading, instead of syncing via an effect.
-function ReviewForm({ courseId, existing }) {
+// Keyed by `existing?.id ?? 'new'` from the parent, so this remounts (fresh initial state and
+// back to read-only/edit mode) the moment the caller's own review finishes loading or changes,
+// instead of syncing via an effect.
+function ReviewForm({ courseId, existing, format }) {
   const { t } = useI18n();
   const queryClient = useQueryClient();
+  // No existing review yet: start straight in the editable form. Already have one: start
+  // collapsed to the compact read-only view below, with an edit icon to reopen the form.
+  const [editing, setEditing] = useState(!existing);
   const [rating, setRating] = useState(existing?.rating ?? 0);
   const [hovered, setHovered] = useState(0);
   const [comment, setComment] = useState(existing?.comment ?? '');
@@ -54,6 +58,7 @@ function ReviewForm({ courseId, existing }) {
     mutationFn: () => saveMyReview(courseId, { rating, comment: comment.trim() || undefined }),
     onSuccess: (result) => {
       toast.success(result.message);
+      setEditing(false);
       refresh();
     },
     onError: (error) => toast.error(errorMessage(error, t)),
@@ -69,6 +74,42 @@ function ReviewForm({ courseId, existing }) {
     },
     onError: (error) => toast.error(errorMessage(error, t)),
   });
+
+  if (existing && !editing) {
+    return (
+      <Card variant="default" className="p-5">
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <p className="text-sm font-medium text-foreground">{t('courses.reviews.editYours')}</p>
+            <div className="mt-2">
+              <Stars value={existing.rating} size="size-5" />
+            </div>
+            {existing.comment ? <p className="mt-2 text-sm text-foreground-muted">{existing.comment}</p> : null}
+            {existing.createdAt ? <p className="mt-2 text-xs text-foreground-subtle">{format.date(existing.createdAt, { dateStyle: 'medium' })}</p> : null}
+          </div>
+          <div className="flex shrink-0 items-center gap-1">
+            <button
+              type="button"
+              onClick={() => setEditing(true)}
+              aria-label={t('courses.reviews.edit')}
+              className="rounded-md p-2 text-foreground-muted transition-colors hover:bg-surface-muted hover:text-foreground"
+            >
+              <Pencil className="size-4" aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              onClick={() => remove.mutate()}
+              disabled={remove.isPending}
+              aria-label={t('courses.reviews.remove')}
+              className="rounded-md p-2 text-foreground-muted transition-colors hover:bg-error-soft hover:text-error disabled:opacity-60"
+            >
+              <Trash2 className="size-4" aria-hidden="true" />
+            </button>
+          </div>
+        </div>
+      </Card>
+    );
+  }
 
   return (
     <Card variant="default" className="p-5">
@@ -88,9 +129,17 @@ function ReviewForm({ courseId, existing }) {
           {existing ? t('courses.reviews.update') : t('courses.reviews.submit')}
         </Button>
         {existing ? (
-          <Button size="sm" variant="ghost" loading={remove.isPending} onClick={() => remove.mutate()}>
-            <Trash2 className="size-4" aria-hidden="true" />
-            {t('courses.reviews.remove')}
+          <Button
+            size="sm"
+            variant="ghost"
+            disabled={save.isPending}
+            onClick={() => {
+              setRating(existing.rating);
+              setComment(existing.comment ?? '');
+              setEditing(false);
+            }}
+          >
+            {t('courses.reviews.cancel')}
           </Button>
         ) : null}
       </div>
@@ -125,7 +174,7 @@ export default function CourseReviews({ courseId }) {
 
       {signedIn ? (
         <div className="mt-4">
-          <ReviewForm key={mine.data?.id ?? 'new'} courseId={courseId} existing={mine.data ?? null} />
+          <ReviewForm key={mine.data?.id ?? 'new'} courseId={courseId} existing={mine.data ?? null} format={format} />
         </div>
       ) : (
         <p className="mt-4 text-sm text-foreground-muted">

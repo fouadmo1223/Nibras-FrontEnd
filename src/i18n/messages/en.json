@@ -125,11 +125,6 @@
         "emptyBody": "Reviews from learners appear here after they complete a course. We only show real feedback.",
         "previous": "Previous testimonials",
         "next": "Next testimonials"
-      },
-      "pricing": {
-        "title": "Simple plans",
-        "emptyTitle": "Plans are being finalised",
-        "emptyBody": "Subscription plans will be published here before we open enrolment."
       }
     },
     "journey": {
@@ -522,6 +517,8 @@
       "update": "Update review",
       "submit": "Submit review",
       "remove": "Remove",
+      "edit": "Edit review",
+      "cancel": "Cancel",
       "signInToReview": "Sign in to leave a review"
     },
     "discussion": {

@@ -5,6 +5,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Lock, MessagesSquare, Send, Trash2 } from 'lucide-react';
 import Avatar from '@/components/ui/Avatar';
 import Button from '@/components/ui/Button';
+import Card from '@/components/ui/Card';
 import { useSession } from '@/hooks/use-auth';
 import { useI18n } from '@/i18n/I18nProvider';
 import { Link } from '@/i18n/navigation';
@@ -67,38 +68,40 @@ export default function CourseDiscussion({ courseId }) {
       <h2 className="font-semibold text-foreground">{t('courses.discussion.title')}</h2>
 
       {locked ? (
-        <div className="mt-4 flex flex-col items-center py-8 text-center">
+        <Card variant="default" className="mt-4 flex flex-col items-center p-8 text-center">
           <span className="grid size-10 place-items-center rounded-xl bg-surface-muted text-foreground-subtle">
             <Lock className="size-5" aria-hidden="true" />
           </span>
           <p className="mt-3 text-sm text-foreground-muted">{t('courses.discussion.locked')}</p>
-        </div>
+        </Card>
       ) : (
         <>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              if (message.trim()) post.mutate();
-            }}
-            className="mt-4 flex items-start gap-2"
-          >
-            <textarea
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder={t('courses.discussion.placeholder')}
-              rows={2}
-              className="min-w-0 flex-1 resize-y rounded-lg border border-border-strong bg-surface px-3 py-2.5 text-sm text-foreground placeholder:text-foreground-subtle outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            />
-            <Button type="submit" size="sm" loading={post.isPending} disabled={!message.trim()}>
-              <Send className="size-4" aria-hidden="true" />
-              {t('courses.discussion.post')}
-            </Button>
-          </form>
+          <Card variant="default" className="mt-4 p-4">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (message.trim()) post.mutate();
+              }}
+              className="flex flex-col gap-3 sm:flex-row sm:items-end"
+            >
+              <textarea
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder={t('courses.discussion.placeholder')}
+                rows={2}
+                className="min-w-0 flex-1 resize-y rounded-lg border border-border-strong bg-background px-3.5 py-3 text-sm text-foreground placeholder:text-foreground-subtle outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              />
+              <Button type="submit" loading={post.isPending} disabled={!message.trim()} className="shrink-0">
+                <Send className="size-4" aria-hidden="true" />
+                {t('courses.discussion.post')}
+              </Button>
+            </form>
+          </Card>
 
           {rows.length > 0 ? (
-            <ul className="mt-5 space-y-4">
+            <ul className="mt-5 space-y-3">
               {rows.map((msg) => (
-                <li key={msg.id} className="flex gap-3 border-t border-border pt-4 first:border-t-0 first:pt-0">
+                <Card as="li" key={msg.id} variant="default" className="flex gap-3 p-4">
                   <Avatar user={msg.user} size="sm" />
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
@@ -118,7 +121,7 @@ export default function CourseDiscussion({ courseId }) {
                       <Trash2 className="size-4" aria-hidden="true" />
                     </button>
                   ) : null}
-                </li>
+                </Card>
               ))}
             </ul>
           ) : !list.isPending ? (
