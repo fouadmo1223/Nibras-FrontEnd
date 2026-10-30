@@ -440,6 +440,14 @@
       }
     }
   },
+  "chatbot": {
+    "title": "Nibras Assistant",
+    "close": "Close chat",
+    "placeholder": "Ask a question…",
+    "emptyState": "Ask about courses, enrollment, certificates, or your own account.",
+    "thinking": "Thinking…",
+    "signInToChat": "Sign in to chat"
+  },
   "courses": {
     "directory": {
       "title": "All courses",

@@ -4,6 +4,7 @@ import { env } from '@/lib/env';
 import { THEME_SCRIPT } from '@/lib/theme-script';
 import InlineScript from '@/components/ui/InlineScript';
 import Toaster from '@/components/ui/Toaster';
+import ChatWidget from '@/components/chat/ChatWidget';
 import I18nProvider from '@/i18n/I18nProvider';
 import { dirOf, LOCALE_META, LOCALES } from '@/i18n/config';
 import { getI18n, getMessages } from '@/i18n/dictionaries';
@@ -70,6 +71,7 @@ export default async function RootLayout({ children }) {
           <Providers>
             {children}
             <Toaster />
+            <ChatWidget />
           </Providers>
         </I18nProvider>
       </body>
