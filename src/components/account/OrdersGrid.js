@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { ClipboardList, CreditCard, X } from 'lucide-react';
+import { CheckCircle2, Clock, ClipboardList, CreditCard, Loader2, X, XCircle } from 'lucide-react';
 import Alert from '@/components/ui/Alert';
-import Card from '@/components/ui/Card';
+import Card, { CardGlow } from '@/components/ui/Card';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
 import { useI18n } from '@/i18n/I18nProvider';
 import { Link } from '@/i18n/navigation';
@@ -18,16 +18,25 @@ const STATUS_TONE = {
   CANCELLED: 'bg-error-soft text-error',
 };
 
+const STATUS_ICON = {
+  PENDING: Clock,
+  PAID: CheckCircle2,
+  CANCELLED: XCircle,
+};
+
 function OrderCard({ order, locale, format, t, onCancel, cancelling, onPayNow, payingNow }) {
+  const StatusIcon = STATUS_ICON[order.status];
   return (
-    <Card variant="glass" className="flex flex-col p-5">
-      <div className="flex items-start justify-between gap-3">
+    <Card variant="glass" hover className="flex flex-col p-5">
+      <CardGlow />
+      <div className="relative flex items-start justify-between gap-3">
         <p className="text-sm text-foreground-subtle">{t('account.orders.placedOn', { date: format.date(order.createdAt, { dateStyle: 'medium' }) })}</p>
-        <span className={`shrink-0 rounded-md px-2 py-0.5 text-xs font-medium ${STATUS_TONE[order.status]}`}>
+        <span className={`inline-flex shrink-0 items-center gap-1.5 rounded-md px-2 py-0.5 text-xs font-medium ${STATUS_TONE[order.status]}`}>
+          <StatusIcon className="size-3.5" aria-hidden="true" />
           {t(`account.orders.status.${order.status}`)}
         </span>
       </div>
-      <ul className="mt-3 space-y-2 border-t border-border pt-3">
+      <ul className="relative mt-3 space-y-2 border-t border-border pt-3">
         {order.items.map((orderItem) => {
           const title = locale === 'ar' ? orderItem.courseTitleAr : orderItem.courseTitleEn;
           return (
@@ -44,7 +53,7 @@ function OrderCard({ order, locale, format, t, onCancel, cancelling, onPayNow, p
           );
         })}
       </ul>
-      <div className="mt-3 border-t border-border pt-3 text-sm">
+      <div className="relative mt-3 border-t border-border pt-3 text-sm">
         {order.discountCents > 0 ? (
           <>
             <div className="flex items-center justify-between text-foreground-subtle">
@@ -63,23 +72,25 @@ function OrderCard({ order, locale, format, t, onCancel, cancelling, onPayNow, p
         </div>
       </div>
       {order.status === 'PENDING' && (
-        <div className="mt-3 flex flex-wrap gap-2">
+        <div className="relative mt-3 flex flex-wrap gap-2">
           <button
             type="button"
             onClick={() => onPayNow(order.id)}
             disabled={payingNow}
-            className="inline-flex items-center justify-center gap-2 self-start rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover disabled:opacity-60"
+            aria-busy={payingNow || undefined}
+            className="inline-flex items-center justify-center gap-2 self-start rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover disabled:pointer-events-none disabled:opacity-60"
           >
-            <CreditCard className="size-4" aria-hidden="true" />
+            {payingNow ? <Loader2 className="size-4 animate-spin" aria-hidden="true" /> : <CreditCard className="size-4" aria-hidden="true" />}
             {t('account.orders.payNow')}
           </button>
           <button
             type="button"
             onClick={() => onCancel(order.id)}
             disabled={cancelling}
-            className="inline-flex items-center justify-center gap-2 self-start rounded-md border border-border-strong px-3 py-1.5 text-sm font-medium text-foreground-muted transition-colors hover:border-error/30 hover:bg-error-soft hover:text-error disabled:opacity-60"
+            aria-busy={cancelling || undefined}
+            className="inline-flex items-center justify-center gap-2 self-start rounded-md border border-border-strong px-3 py-1.5 text-sm font-medium text-foreground-muted transition-colors hover:border-error/30 hover:bg-error-soft hover:text-error disabled:pointer-events-none disabled:opacity-60"
           >
-            <X className="size-4" aria-hidden="true" />
+            {cancelling ? <Loader2 className="size-4 animate-spin" aria-hidden="true" /> : <X className="size-4" aria-hidden="true" />}
             {t('account.orders.cancel')}
           </button>
         </div>
@@ -128,20 +139,21 @@ export default function OrdersGrid() {
 
   if (rows.length === 0) {
     return (
-      <div className="flex flex-col items-center py-10 text-center">
-        <span className="grid size-12 place-items-center rounded-xl bg-primary-soft text-primary">
-          <ClipboardList className="size-6" aria-hidden="true" />
+      <Card variant="dashed" className="flex flex-col items-center px-6 py-14 text-center">
+        <span className="grid size-16 place-items-center rounded-2xl bg-primary-soft text-primary">
+          <ClipboardList className="size-7" aria-hidden="true" />
         </span>
-        <p className="mt-4 text-foreground-muted">{t('account.orders.empty')}</p>
+        <p className="mt-5 font-display text-xl tracking-tight text-foreground">{t('account.orders.empty')}</p>
         <Link href="/courses" className="mt-3 text-sm font-medium text-primary hover:underline">
           {t('account.orders.browse')}
         </Link>
-      </div>
+      </Card>
     );
   }
 
   return (
     <div>
+      <p className="mb-4 text-sm font-medium text-foreground-muted">{t('account.orders.itemCount', { count: rows.length })}</p>
       <div className="grid gap-4 sm:grid-cols-2">
         {rows.map((order) => (
           <OrderCard

@@ -3,38 +3,52 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { BookOpen, ClipboardCheck, ShoppingCart, Tag, Trash2, X } from 'lucide-react';
+import { BookOpen, ClipboardCheck, Loader2, Sparkles, Tag, Trash2, X } from 'lucide-react';
 import Alert from '@/components/ui/Alert';
 import Button from '@/components/ui/Button';
-import Card from '@/components/ui/Card';
+import Card, { CardGlow } from '@/components/ui/Card';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
 import CoursePrice from '@/components/ui/CoursePrice';
+import CourseCard from '@/components/ui/CourseCard';
+import { EmptyCartIllustration } from './EmptyStateIllustration';
 import { useI18n } from '@/i18n/I18nProvider';
 import { Link, useLocaleRouter } from '@/i18n/navigation';
 import { errorMessage } from '@/lib/api-errors';
 import { cartKeys, clearCart, listMyCart, removeFromCart } from '@/services/cart.service';
+import { getPublishedCourses } from '@/services/courses.service';
 import { validateCoupon } from '@/services/coupons.service';
 import { orderKeys, placeOrder, startCheckout } from '@/services/orders.service';
 import { toast } from '@/stores/toast-store';
+
+const RELATED_LIMIT = 8;
+const RELATED_SHOWN = 4;
 
 /** One cart item: cover, title, price and an explicit remove button. */
 function CartItemCard({ item, locale, format, t, onRemove, removing }) {
   const title = locale === 'ar' ? item.course.titleAr : item.course.titleEn;
 
   return (
-    <Card variant="glass" className="flex flex-col p-3">
+    <Card variant="glass" hover className="flex flex-col p-3">
+      <CardGlow />
       <Link href={`/courses/${item.course.slug}`} className="flex flex-1 flex-col">
         <div className="relative aspect-[16/10] overflow-hidden rounded-xl border border-border/60">
           {item.course.imageUrl ? (
-            <Image src={item.course.imageUrl} alt="" fill sizes="(min-width: 1024px) 320px, 90vw" unoptimized className="object-cover" />
+            <Image
+              src={item.course.imageUrl}
+              alt=""
+              fill
+              sizes="(min-width: 1024px) 320px, 90vw"
+              unoptimized
+              className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+            />
           ) : (
             <div className="grid size-full place-items-center bg-surface-muted text-foreground-subtle">
               <BookOpen className="size-8" aria-hidden="true" />
             </div>
           )}
         </div>
-        <h3 className="mt-3 line-clamp-2 font-semibold text-foreground hover:text-primary">{title}</h3>
-        <div className="mt-2 flex-1">
+        <h3 className="relative mt-3 line-clamp-2 font-semibold text-foreground group-hover:text-primary">{title}</h3>
+        <div className="relative mt-2 flex-1">
           <CoursePrice priceCents={item.course.priceCents} compareAtPriceCents={item.course.compareAtPriceCents} format={format} t={t} />
         </div>
       </Link>
@@ -42,13 +56,50 @@ function CartItemCard({ item, locale, format, t, onRemove, removing }) {
         type="button"
         onClick={() => onRemove(item.course.id)}
         disabled={removing}
+        aria-busy={removing || undefined}
         aria-label={t('courses.detail.removeFromCart')}
-        className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-md border border-border-strong px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:border-error/30 hover:bg-error-soft hover:text-error disabled:opacity-60"
+        className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-md border border-border-strong px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:border-error/30 hover:bg-error-soft hover:text-error disabled:pointer-events-none disabled:opacity-60"
       >
-        <X className="size-4 shrink-0" aria-hidden="true" />
+        {removing ? (
+          <Loader2 className="size-4 shrink-0 animate-spin" aria-hidden="true" />
+        ) : (
+          <X className="size-4 shrink-0" aria-hidden="true" />
+        )}
         {t('courses.detail.removeFromCart')}
       </button>
     </Card>
+  );
+}
+
+/**
+ * A handful of published courses not already in the cart, as a light upsell below the order
+ * summary. Fetches a small overshoot (RELATED_LIMIT) client-side and trims to RELATED_SHOWN
+ * after filtering out cart items, since the API has no "exclude these ids" param to filter on
+ * the server — fine at this scale (a few extra rows), not worth a new endpoint for.
+ */
+function RelatedCourses({ excludeIds, locale, format, t }) {
+  const related = useQuery({
+    queryKey: ['courses', 'published', { limit: RELATED_LIMIT, context: 'cart-related' }],
+    queryFn: () => getPublishedCourses({ limit: RELATED_LIMIT }),
+    staleTime: 5 * 60 * 1000,
+  });
+  const rows = (related.data?.items ?? []).filter((course) => !excludeIds.has(course.id)).slice(0, RELATED_SHOWN);
+
+  if (related.isPending || rows.length === 0) return null;
+
+  return (
+    <div className="mt-10">
+      <div className="flex items-center gap-2">
+        <Sparkles className="size-4 text-primary" aria-hidden="true" />
+        <h2 className="font-display text-xl tracking-tight text-foreground">{t('account.cart.relatedTitle')}</h2>
+      </div>
+      <p className="mt-1 text-sm text-foreground-muted">{t('account.cart.relatedDescription')}</p>
+      <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {rows.map((course) => (
+          <CourseCard key={course.id} course={course} locale={locale} t={t} format={format} />
+        ))}
+      </ul>
+    </div>
   );
 }
 
@@ -133,21 +184,21 @@ export default function CartGrid() {
 
   if (rows.length === 0) {
     return (
-      <div className="flex flex-col items-center py-10 text-center">
-        <span className="grid size-12 place-items-center rounded-xl bg-primary-soft text-primary">
-          <ShoppingCart className="size-6" aria-hidden="true" />
-        </span>
-        <p className="mt-4 text-foreground-muted">{t('account.cart.empty')}</p>
-        <Link href="/courses" className="mt-3 text-sm font-medium text-primary hover:underline">
+      <Card variant="dashed" className="flex flex-col items-center px-6 py-14 text-center">
+        <EmptyCartIllustration className="h-36 w-36" />
+        <p className="mt-5 font-display text-xl tracking-tight text-foreground">{t('account.cart.empty')}</p>
+        <p className="mt-2 max-w-xs text-sm leading-6 text-foreground-muted">{t('account.cart.emptyHint')}</p>
+        <Link href="/courses" className="mt-5 text-sm font-medium text-primary hover:underline">
           {t('account.cart.browse')}
         </Link>
-      </div>
+      </Card>
     );
   }
 
   return (
     <div>
-      <div className="flex justify-end">
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-sm font-medium text-foreground-muted">{t('account.cart.itemCount', { count: rows.length })}</p>
         <Button variant="secondary" size="sm" onClick={() => setConfirmingClear(true)}>
           <Trash2 className="size-4" aria-hidden="true" />
           {t('account.cart.clear')}
@@ -228,6 +279,7 @@ export default function CartGrid() {
         </Button>
         <p className="mt-3 text-sm text-foreground-subtle">{t('account.cart.payNowHint')}</p>
       </div>
+      <RelatedCourses excludeIds={new Set(rows.map((item) => item.course.id))} locale={locale} format={format} t={t} />
       <ConfirmDialog
         open={confirmingClear}
         icon={Trash2}

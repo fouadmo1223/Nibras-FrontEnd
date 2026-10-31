@@ -290,7 +290,15 @@
       "description": "Courses you're enrolled in, and how far you've gotten.",
       "loading": "Loading your courses",
       "empty": "You haven't enrolled in a course yet.",
-      "browse": "Browse courses"
+      "browse": "Browse courses",
+      "itemCount": {
+        "zero": "{count} courses",
+        "one": "{count} course",
+        "two": "{count} courses",
+        "few": "{count} courses",
+        "many": "{count} courses",
+        "other": "{count} courses"
+      }
     },
     "certificates": {
       "title": "Certificates",
@@ -305,17 +313,27 @@
       "description": "Courses you've saved for later.",
       "loading": "Loading your wishlist",
       "empty": "Save a course to your wishlist to find it here.",
+      "emptyHint": "Tap the heart on any course to save it for later.",
       "browse": "Browse courses",
       "remove": "Remove from wishlist",
       "clear": "Clear wishlist",
       "clearConfirmTitle": "Clear your wishlist?",
-      "clearConfirmDescription": "This removes every saved course from your wishlist. You can always save them again later."
+      "clearConfirmDescription": "This removes every saved course from your wishlist. You can always save them again later.",
+      "itemCount": {
+        "zero": "{count} saved courses",
+        "one": "{count} saved course",
+        "two": "{count} saved courses",
+        "few": "{count} saved courses",
+        "many": "{count} saved courses",
+        "other": "{count} saved courses"
+      }
     },
     "cart": {
       "title": "Cart",
       "description": "Paid courses you're ready to order.",
       "loading": "Loading your cart",
       "empty": "Your cart is empty.",
+      "emptyHint": "Save courses you're interested in here, then check out with one payment.",
       "browse": "Browse courses",
       "remove": "Remove from cart",
       "subtotal": "Subtotal",
@@ -331,7 +349,17 @@
       "couponRemove": "Remove",
       "clear": "Clear cart",
       "clearConfirmTitle": "Clear your cart?",
-      "clearConfirmDescription": "This removes every course from your cart. You can always add them again later."
+      "clearConfirmDescription": "This removes every course from your cart. You can always add them again later.",
+      "itemCount": {
+        "zero": "{count} items",
+        "one": "{count} item",
+        "two": "{count} items",
+        "few": "{count} items",
+        "many": "{count} items",
+        "other": "{count} items"
+      },
+      "relatedTitle": "You might also like",
+      "relatedDescription": "Popular courses other learners pair with their order."
     },
     "orders": {
       "title": "Orders",
@@ -340,6 +368,14 @@
       "empty": "You haven't placed an order yet.",
       "browse": "Browse courses",
       "placedOn": "Placed {date}",
+      "itemCount": {
+        "zero": "{count} orders",
+        "one": "{count} order",
+        "two": "{count} orders",
+        "few": "{count} orders",
+        "many": "{count} orders",
+        "other": "{count} orders"
+      },
       "subtotal": "Subtotal",
       "discount": "Coupon “{code}”",
       "total": "Total",
