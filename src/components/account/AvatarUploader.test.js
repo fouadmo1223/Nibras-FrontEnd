@@ -42,7 +42,7 @@ function installXhr(status, body, progressSteps = [40, 100]) {
 
 function renderUploader(user) {
   const client = new QueryClient({ defaultOptions: { mutations: { retry: false } } });
-  client.setQueryData(['auth', 'session'], { user, csrfToken: 'c' });
+  client.setQueryData(['auth', 'session'], { user });
   render(
     withI18n(
       <QueryClientProvider client={client}>
@@ -81,7 +81,8 @@ describe('AvatarUploader', () => {
     expect(xhr.method).toBe('PUT');
     expect(xhr.url).toMatch(/\/users\/me\/avatar$/);
     expect(xhr.body).toBeInstanceOf(FormData);
-    expect(xhr.withCredentials).toBe(true);
+    expect(xhr.headers['X-Auth-Transport']).toBe('token');
+    expect(xhr.headers['X-Client-Type']).toBe('web');
     expect(seenProgress).toEqual([40, 100]);
     expect(client.getQueryData(['auth', 'session']).user.avatarUrl).toBe(updated.avatarUrl);
   });

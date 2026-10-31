@@ -1,20 +1,20 @@
 import { env } from './env';
+import { tokenStorage } from './token-storage';
 
-const SAFE_METHODS = new Set(['GET', 'HEAD', 'OPTIONS']);
 /**
  * The page language (<html lang>, set from the route) — sent as Accept-Language so the
  * API answers with messages in the language the user is reading.
  */
 const pageLocale = () => (typeof document !== 'undefined' && document.documentElement.lang) || 'en';
-/** The API sets a readable `nb_session=1` cookie while a refresh token exists. */
-const hasSessionHint = () => typeof document !== 'undefined' && /(?:^|;\s*)nb_session=1/.test(document.cookie);
 
 /**
  * 401s worth one refresh attempt: an expired access token, or a missing/invalid one while
- * the session hint says a refresh token should still exist.
+ * a refresh token is still in storage (e.g. a fresh tab, before the in-memory access token
+ * has been restored).
  */
 const shouldRefresh = (error) =>
-  error.code === 'TOKEN_EXPIRED' || (hasSessionHint() && ['UNAUTHORIZED', 'SESSION_EXPIRED'].includes(error.code));
+  error.code === 'TOKEN_EXPIRED' ||
+  (Boolean(tokenStorage.getRefreshToken()) && ['UNAUTHORIZED', 'SESSION_EXPIRED'].includes(error.code));
 const AUTH_PATHS_WITHOUT_REFRESH = ['/auth/login', '/auth/register', '/auth/refresh', '/auth/logout'];
 
 /** Error raised for any non-2xx API response, carrying the API error envelope. */
@@ -28,15 +28,6 @@ export class ApiError extends Error {
     this.requestId = body?.meta?.requestId;
   }
 }
-
-// ─── CSRF ────────────────────────────────────────────────────────────────
-// The API returns a session-bound CSRF token with login/register/refresh/session.
-// It lives in memory only and is echoed on every state-changing request.
-let csrfToken = null;
-export const setCsrfToken = (token) => {
-  csrfToken = token || null;
-};
-export const getCsrfToken = () => csrfToken;
 
 // ─── Session-expired notification ────────────────────────────────────────
 const expiredListeners = new Set();
@@ -57,17 +48,21 @@ function buildUrl(path, query) {
 }
 
 async function send(path, { method = 'GET', body, query, headers, ...init }) {
+  const accessToken = tokenStorage.getAccessToken();
   let response;
   try {
     response = await fetch(buildUrl(path, query), {
       method,
-      credentials: 'include',
       headers: {
         Accept: 'application/json',
         'Accept-Language': pageLocale(),
+        // Tokens, never cookies: the site, dashboard and API are three separate origins
+        // with no shared parent domain, so SameSite cookie auth can't work here at all.
+        'X-Auth-Transport': 'token',
+        'X-Client-Type': 'web',
         // FormData (file uploads) sets its own multipart boundary header.
         ...(body !== undefined && !(body instanceof FormData) ? { 'Content-Type': 'application/json' } : {}),
-        ...(!SAFE_METHODS.has(method) && csrfToken ? { 'X-CSRF-Token': csrfToken } : {}),
+        ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
         ...headers,
       },
       body: body === undefined || body instanceof FormData ? body : JSON.stringify(body),
@@ -85,23 +80,34 @@ async function send(path, { method = 'GET', body, query, headers, ...init }) {
     : { data: null, message: undefined, meta: undefined };
 }
 
+/** Persists a token-transport auth response (login/register/refresh). */
+export function storeSession(data) {
+  tokenStorage.setAccessToken(data.accessToken);
+  tokenStorage.setRefreshToken(data.refreshToken);
+  return data;
+}
+
 // ─── Coordinated refresh ─────────────────────────────────────────────────
-// Concurrent 401s share one refresh request; a REFRESH_RACE (another tab
-// rotated first — its new cookie is already in the jar) is retried once.
+// One refresh at a time: concurrent 401s (incl. across tabs, since the refresh token lives
+// in localStorage, shared per-origin) await the same promise, so a rotated refresh token is
+// never presented twice (which the API treats as theft — REFRESH_RACE below is that timing
+// collision, not actual reuse: another tab's refresh already won and rotated the token).
 let refreshInFlight = null;
 
 export function refreshSession() {
   refreshInFlight ??= (async () => {
-    try {
-      const { data } = await send('/auth/refresh', { method: 'POST' });
-      setCsrfToken(data.csrfToken);
-      return data;
-    } catch (error) {
-      if (error instanceof ApiError && error.code === 'REFRESH_RACE') {
-        const { data } = await send('/auth/refresh', { method: 'POST' });
-        setCsrfToken(data.csrfToken);
-        return data;
+    const attempt = async () => {
+      const refreshToken = tokenStorage.getRefreshToken();
+      if (!refreshToken) {
+        throw new ApiError(401, { error: { code: 'REFRESH_TOKEN_INVALID', message: 'Not signed in.' } });
       }
+      const { data } = await send('/auth/refresh', { method: 'POST', body: { refreshToken } });
+      return storeSession(data);
+    };
+    try {
+      return await attempt();
+    } catch (error) {
+      if (error instanceof ApiError && error.code === 'REFRESH_RACE') return attempt();
       throw error;
     }
   })().finally(() => {
@@ -137,7 +143,7 @@ async function withRefresh(path, run) {
     try {
       await refreshSession();
     } catch (refreshError) {
-      setCsrfToken(null);
+      tokenStorage.clear();
       expiredListeners.forEach((listener) => listener(refreshError));
       throw refreshError;
     }
@@ -145,15 +151,17 @@ async function withRefresh(path, run) {
   }
 }
 
-/** XHR transport for uploads: fetch can't report upload progress. Same envelope, CSRF and errors. */
+/** XHR transport for uploads: fetch can't report upload progress. Same envelope and errors. */
 function sendWithProgress(path, { method, body, onProgress }) {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.open(method, buildUrl(path));
-    xhr.withCredentials = true;
     xhr.setRequestHeader('Accept', 'application/json');
     xhr.setRequestHeader('Accept-Language', pageLocale());
-    if (csrfToken) xhr.setRequestHeader('X-CSRF-Token', csrfToken);
+    xhr.setRequestHeader('X-Auth-Transport', 'token');
+    xhr.setRequestHeader('X-Client-Type', 'web');
+    const accessToken = tokenStorage.getAccessToken();
+    if (accessToken) xhr.setRequestHeader('Authorization', `Bearer ${accessToken}`);
     xhr.upload.onprogress = (event) => {
       if (event.lengthComputable) onProgress?.(Math.round((event.loaded / event.total) * 100));
     };

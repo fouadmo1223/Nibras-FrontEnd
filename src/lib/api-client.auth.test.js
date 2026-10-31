@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { apiRequest, getCsrfToken, onSessionExpired, setCsrfToken } from './api-client';
+import { apiRequest, onSessionExpired } from './api-client';
+import { tokenStorage } from './token-storage';
 
 const ok = (data) => ({ ok: true, status: 200, json: () => Promise.resolve({ success: true, data }) });
 const fail = (status, code) => ({
@@ -8,30 +9,45 @@ const fail = (status, code) => ({
   json: () => Promise.resolve({ success: false, error: { code, message: code } }),
 });
 
-beforeEach(() => setCsrfToken(null));
-afterEach(() => vi.unstubAllGlobals());
+beforeEach(() => tokenStorage.clear());
+afterEach(() => {
+  vi.unstubAllGlobals();
+  tokenStorage.clear();
+});
 
-describe('apiRequest — CSRF', () => {
-  it('sends the CSRF token on writes but not on reads', async () => {
+describe('apiRequest — token transport', () => {
+  it('sends the access token as a Bearer header once stored, and the transport headers on every request', async () => {
     const fetchMock = vi.fn().mockResolvedValue(ok({}));
     vi.stubGlobal('fetch', fetchMock);
-    setCsrfToken('csrf-123');
+    tokenStorage.setAccessToken('access-123');
 
     await apiRequest('/users/me');
-    await apiRequest('/users/me', { method: 'PATCH', body: { name: 'x' } });
 
-    expect(fetchMock.mock.calls[0][1].headers['X-CSRF-Token']).toBeUndefined();
-    expect(fetchMock.mock.calls[1][1].headers['X-CSRF-Token']).toBe('csrf-123');
+    const headers = fetchMock.mock.calls[0][1].headers;
+    expect(headers.Authorization).toBe('Bearer access-123');
+    expect(headers['X-Auth-Transport']).toBe('token');
+    expect(headers['X-Client-Type']).toBe('web');
+  });
+
+  it('omits Authorization when no access token is stored', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(ok({}));
+    vi.stubGlobal('fetch', fetchMock);
+
+    await apiRequest('/courses');
+
+    expect(fetchMock.mock.calls[0][1].headers.Authorization).toBeUndefined();
   });
 });
 
 describe('apiRequest — coordinated refresh', () => {
-  it('refreshes once for concurrent expired requests, then retries each', async () => {
+  it('refreshes once for concurrent expired requests, then retries each, storing the new tokens', async () => {
+    tokenStorage.setAccessToken('stale');
+    tokenStorage.setRefreshToken('refresh-1');
     let refreshed = false;
     const fetchMock = vi.fn((url) => {
       if (url.endsWith('/auth/refresh')) {
         refreshed = true;
-        return Promise.resolve(ok({ csrfToken: 'new-csrf' }));
+        return Promise.resolve(ok({ accessToken: 'fresh', refreshToken: 'refresh-2' }));
       }
       return Promise.resolve(refreshed ? ok({ url }) : fail(401, 'TOKEN_EXPIRED'));
     });
@@ -42,17 +58,23 @@ describe('apiRequest — coordinated refresh', () => {
     expect(a.data.url).toMatch(/\/a$/);
     expect(b.data.url).toMatch(/\/b$/);
     expect(fetchMock.mock.calls.filter(([url]) => url.endsWith('/auth/refresh'))).toHaveLength(1);
-    expect(getCsrfToken()).toBe('new-csrf');
+    expect(tokenStorage.getAccessToken()).toBe('fresh');
+    expect(tokenStorage.getRefreshToken()).toBe('refresh-2');
+    // The refresh call itself carries the stored refresh token in its body, not a cookie.
+    const refreshCall = fetchMock.mock.calls.find(([url]) => url.endsWith('/auth/refresh'));
+    expect(JSON.parse(refreshCall[1].body)).toEqual({ refreshToken: 'refresh-1' });
   });
 
   it('retries a refresh once when another tab won the rotation race', async () => {
-    const responses = [fail(401, 'TOKEN_EXPIRED'), fail(401, 'REFRESH_RACE'), ok({ csrfToken: 'c2' }), ok({ done: true })];
+    tokenStorage.setRefreshToken('refresh-1');
+    const responses = [fail(401, 'TOKEN_EXPIRED'), fail(401, 'REFRESH_RACE'), ok({ accessToken: 'a2', refreshToken: 'r2' }), ok({ done: true })];
     vi.stubGlobal('fetch', vi.fn(() => Promise.resolve(responses.shift())));
     await expect(apiRequest('/x')).resolves.toMatchObject({ data: { done: true } });
   });
 
-  it('notifies listeners and clears CSRF when the session cannot be refreshed', async () => {
-    setCsrfToken('old');
+  it('notifies listeners and clears stored tokens when the session cannot be refreshed', async () => {
+    tokenStorage.setAccessToken('stale');
+    tokenStorage.setRefreshToken('refresh-1');
     vi.stubGlobal(
       'fetch',
       vi.fn((url) => Promise.resolve(url.endsWith('/auth/refresh') ? fail(401, 'SESSION_REVOKED') : fail(401, 'TOKEN_EXPIRED'))),
@@ -62,28 +84,28 @@ describe('apiRequest — coordinated refresh', () => {
 
     await expect(apiRequest('/x')).rejects.toMatchObject({ code: 'SESSION_REVOKED' });
     expect(listener).toHaveBeenCalledOnce();
-    expect(getCsrfToken()).toBeNull();
+    expect(tokenStorage.getAccessToken()).toBeNull();
+    expect(tokenStorage.getRefreshToken()).toBeNull();
     unsubscribe();
   });
 
-  it('refreshes on UNAUTHORIZED when the session hint cookie says a session should exist', async () => {
-    document.cookie = 'nb_session=1';
+  it('refreshes on UNAUTHORIZED when a refresh token is in storage (e.g. a fresh tab)', async () => {
+    tokenStorage.setRefreshToken('refresh-1');
     let refreshed = false;
     vi.stubGlobal(
       'fetch',
       vi.fn((url) => {
         if (url.endsWith('/auth/refresh')) {
           refreshed = true;
-          return Promise.resolve(ok({ csrfToken: 'c3' }));
+          return Promise.resolve(ok({ accessToken: 'a2', refreshToken: 'r2' }));
         }
         return Promise.resolve(refreshed ? ok({ back: true }) : fail(401, 'UNAUTHORIZED'));
       }),
     );
     await expect(apiRequest('/auth/session')).resolves.toMatchObject({ data: { back: true } });
-    document.cookie = 'nb_session=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
   });
 
-  it('never refreshes for credential endpoints or non-expiry 401s', async () => {
+  it('never refreshes for credential endpoints, non-expiry 401s, or when no refresh token is stored', async () => {
     const fetchMock = vi.fn().mockResolvedValue(fail(401, 'INVALID_CREDENTIALS'));
     vi.stubGlobal('fetch', fetchMock);
     await expect(apiRequest('/auth/login', { method: 'POST', body: {} })).rejects.toMatchObject({ code: 'INVALID_CREDENTIALS' });

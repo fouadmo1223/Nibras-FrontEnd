@@ -22,7 +22,7 @@ describe('apiRequest', () => {
     expect(result).toEqual({ data: { status: 'ok' }, meta: { requestId: 'r1' } });
     const [url, init] = fetchMock.mock.calls[0];
     expect(url).toBe('http://localhost:5000/api/v1/health?a=1');
-    expect(init.credentials).toBe('include');
+    expect(init.headers['X-Auth-Transport']).toBe('token');
     expect(init.headers['Content-Type']).toBeUndefined();
   });
 

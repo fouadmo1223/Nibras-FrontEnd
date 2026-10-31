@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { withI18n } from '@/test/i18n';
 import { useToastStore } from '@/stores/toast-store';
+import { tokenStorage } from '@/lib/token-storage';
 import SignOutButton from './SignOutButton';
 
 const replace = vi.fn();
@@ -22,6 +23,7 @@ afterEach(() => {
   vi.unstubAllGlobals();
   replace.mockReset();
   useToastStore.setState({ toasts: [] });
+  tokenStorage.clear();
 });
 
 function renderButton() {
@@ -51,6 +53,7 @@ describe('SignOutButton', () => {
   });
 
   it('signs out after confirming and shows the API message', async () => {
+    tokenStorage.setRefreshToken('refresh-1');
     vi.stubGlobal(
       'fetch',
       vi.fn().mockResolvedValue({ ok: true, status: 200, json: () => Promise.resolve({ success: true, data: null, message: 'You have been signed out.' }) }),

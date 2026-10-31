@@ -6,7 +6,7 @@ import { useI18n } from '@/i18n/I18nProvider';
 import { errorMessage } from '@/lib/api-errors';
 import { toast } from '@/stores/toast-store';
 
-/** Current session ({ user, session, csrfToken }) or null. Personal data: never shared-cached. */
+/** Current session ({ user, session }) or null. Personal data: never shared-cached. */
 export function useSession() {
   return useQuery({
     queryKey: authKeys.session(),

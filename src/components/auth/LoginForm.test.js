@@ -61,7 +61,11 @@ describe('LoginForm', () => {
 
   it('signs in and returns to a safe "next" destination', async () => {
     searchParams = new URLSearchParams('next=/account?tab=security');
-    respond(200, { success: true, data: { user: { name: 'Layla' }, csrfToken: 'c' }, message: 'Welcome back, Layla.' });
+    respond(200, {
+      success: true,
+      data: { user: { name: 'Layla' }, accessToken: 'at', refreshToken: 'rt' },
+      message: 'Welcome back, Layla.',
+    });
     renderForm();
 
     await userEvent.type(screen.getByLabelText('Email'), 'layla@example.com');
@@ -73,12 +77,13 @@ describe('LoginForm', () => {
     expect(useToastStore.getState().toasts.at(-1)).toMatchObject({ tone: 'success', message: 'Welcome back, Layla.' });
     const [, init] = fetch.mock.calls[0];
     expect(JSON.parse(init.body)).toEqual({ email: 'layla@example.com', password: 'correct password' });
-    expect(init.credentials).toBe('include');
+    expect(init.headers.Authorization).toBeUndefined(); // no token stored yet — this is the login call itself
+    expect(init.headers['X-Auth-Transport']).toBe('token');
   });
 
   it('ignores an off-site "next" parameter', async () => {
     searchParams = new URLSearchParams('next=//evil.example');
-    respond(200, { success: true, data: { user: {}, csrfToken: 'c' } });
+    respond(200, { success: true, data: { user: {}, accessToken: 'at', refreshToken: 'rt' } });
     renderForm();
 
     await userEvent.type(screen.getByLabelText('Email'), 'layla@example.com');
