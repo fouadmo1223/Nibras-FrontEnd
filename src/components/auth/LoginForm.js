@@ -31,7 +31,10 @@ export default function LoginForm() {
 
   const onSubmit = handleSubmit((values) =>
     login.mutate(values, {
-      onSuccess: () => router.replace(safeRedirect(params.get('next'))),
+      onSuccess: () => {
+        if (typeof window !== 'undefined') window.__loginFormOnSuccess = { t: performance.now(), cached: window.__loginSuccess };
+        router.replace(safeRedirect(params.get('next')));
+      },
       onError: (error) => applyFieldErrors(error, setError, ['email', 'password']),
     }),
   );

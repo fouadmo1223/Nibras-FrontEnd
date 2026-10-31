@@ -40,6 +40,9 @@ function useSessionMutation(fn) {
     mutationFn: fn,
     onSuccess: (result) => {
       queryClient.setQueryData(authKeys.session(), result.data);
+      if (typeof window !== 'undefined') {
+        window.__loginSuccess = { data: result.data, cachedAfter: queryClient.getQueryData(authKeys.session()), t: performance.now() };
+      }
       toast.success(result.message);
     },
   });
