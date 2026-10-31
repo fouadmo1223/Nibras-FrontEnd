@@ -3,6 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ShoppingCart } from 'lucide-react';
 import { useSession } from '@/hooks/use-auth';
+import { useEnrolledCourseIds } from '@/hooks/use-enrolled-courses';
 import { useI18n } from '@/i18n/I18nProvider';
 import { cn } from '@/lib/cn';
 import { errorMessage } from '@/lib/api-errors';
@@ -19,6 +20,7 @@ export default function CartButton({ courseId, priceCents, compact = false, clas
   const { t } = useI18n();
   const session = useSession();
   const signedIn = Boolean(session.data);
+  const { ids: enrolledIds } = useEnrolledCourseIds();
   const queryClient = useQueryClient();
 
   const cart = useQuery({ queryKey: cartKeys.mine(), queryFn: listMyCart, enabled: signedIn });
@@ -48,7 +50,7 @@ export default function CartButton({ courseId, priceCents, compact = false, clas
     onSettled: () => queryClient.invalidateQueries({ queryKey: cartKeys.mine() }),
   });
 
-  if (!signedIn) return null;
+  if (!signedIn || enrolledIds.has(courseId)) return null;
 
   // The accessible name stays fully descriptive; the visible label on the non-compact (detail
   // page) variant stays short on purpose — "Remove from cart" wraps onto three lines in a narrow

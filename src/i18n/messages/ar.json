@@ -482,7 +482,8 @@
       "view": "عرض الدورة",
       "off": "خصم {percent}٪",
       "addToWishlist": "أضف إلى قائمة الرغبات",
-      "removeFromWishlist": "إزالة من قائمة الرغبات"
+      "removeFromWishlist": "إزالة من قائمة الرغبات",
+      "enrolled": "مُسجَّل"
     },
     "level": {
       "BEGINNER": "مبتدئ",
@@ -513,7 +514,8 @@
       "wishlist": "قائمة الرغبات",
       "wishlisted": "في القائمة",
       "addToCartShort": "أضف إلى السلة",
-      "inCart": "في السلة"
+      "inCart": "في السلة",
+      "alreadyEnrolled": "أنت مسجَّل بالفعل في هذه الدورة"
     },
     "reviews": {
       "title": "التقييمات",

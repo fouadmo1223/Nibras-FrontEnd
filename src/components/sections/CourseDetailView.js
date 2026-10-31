@@ -5,6 +5,7 @@ import Avatar from '@/components/ui/Avatar';
 import Card from '@/components/ui/Card';
 import CartButton from '@/components/ui/CartButton';
 import CoursePrice from '@/components/ui/CoursePrice';
+import EnrolledBadge from '@/components/ui/EnrolledBadge';
 import WishlistButton from '@/components/ui/WishlistButton';
 import CourseDiscussion from '@/components/sections/CourseDiscussion';
 import CourseReviews from '@/components/sections/CourseReviews';
@@ -83,7 +84,9 @@ export default async function CourseDetailView({ params }) {
             <CoursePrice priceCents={course.priceCents} compareAtPriceCents={course.compareAtPriceCents} format={format} t={t} size="lg" />
             <div className="mt-4 flex flex-wrap gap-2">
               <WishlistButton courseId={course.id} className="flex-1" />
-              {course.priceCents > 0 ? <CartButton courseId={course.id} priceCents={course.priceCents} className="flex-1" /> : null}
+              <EnrolledBadge courseId={course.id} className="flex-1 justify-center py-2.5">
+                {course.priceCents > 0 ? <CartButton courseId={course.id} priceCents={course.priceCents} className="flex-1" /> : null}
+              </EnrolledBadge>
             </div>
             <dl className="mt-5 space-y-3 border-t border-border pt-5 text-sm">
               <div className="flex items-center justify-between gap-3">

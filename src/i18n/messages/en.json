@@ -482,7 +482,8 @@
       "view": "View course",
       "off": "-{percent}%",
       "addToWishlist": "Add to wishlist",
-      "removeFromWishlist": "Remove from wishlist"
+      "removeFromWishlist": "Remove from wishlist",
+      "enrolled": "Enrolled"
     },
     "level": {
       "BEGINNER": "Beginner",
@@ -513,7 +514,8 @@
       "wishlist": "Wishlist",
       "wishlisted": "Wishlisted",
       "addToCartShort": "Add to cart",
-      "inCart": "In cart"
+      "inCart": "In cart",
+      "alreadyEnrolled": "You're already enrolled in this course"
     },
     "reviews": {
       "title": "Reviews",

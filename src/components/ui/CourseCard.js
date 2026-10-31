@@ -4,6 +4,7 @@ import Avatar from '@/components/ui/Avatar';
 import Card, { CardGlow } from '@/components/ui/Card';
 import CartButton from '@/components/ui/CartButton';
 import CoursePrice, { discountPercent } from '@/components/ui/CoursePrice';
+import EnrolledBadge from '@/components/ui/EnrolledBadge';
 import WishlistButton from '@/components/ui/WishlistButton';
 import { Link } from '@/i18n/navigation';
 
@@ -45,9 +46,11 @@ export default function CourseCard({ course, locale, t, format, reveal = false }
             </span>
           ) : null}
           <WishlistButton courseId={course.id} compact className="absolute end-2.5 bottom-2.5" />
-          {course.priceCents > 0 ? (
-            <CartButton courseId={course.id} priceCents={course.priceCents} compact className="absolute start-2.5 bottom-2.5" />
-          ) : null}
+          <EnrolledBadge courseId={course.id} compact className="absolute start-2.5 bottom-2.5">
+            {course.priceCents > 0 ? (
+              <CartButton courseId={course.id} priceCents={course.priceCents} compact className="absolute start-2.5 bottom-2.5" />
+            ) : null}
+          </EnrolledBadge>
         </div>
         <div className="relative flex flex-1 flex-col px-2 pb-2 pt-4">
           <h3 className="text-lg font-semibold text-foreground">{title}</h3>
