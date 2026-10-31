@@ -97,9 +97,6 @@ export default function AccountView() {
 
   // Client-side guard for UX; the API independently rejects unauthenticated requests.
   useEffect(() => {
-    window.__accountRenders = [...(window.__accountRenders || []), { isPending: session.isPending, isSuccess: session.isSuccess, hasData: Boolean(session.data), t: performance.now() }];
-  });
-  useEffect(() => {
     if (session.isSuccess && !session.data) router.replace('/login?next=/account');
   }, [session.isSuccess, session.data, router]);
 

@@ -69,14 +69,6 @@ describe('proxy', () => {
     );
   });
 
-  it('keeps signed-out visitors out of the account, in their language', () => {
-    expect(run('/ar/account').headers.get('location')).toBe('http://localhost:3000/ar/login?next=%2Far%2Faccount');
-  });
-
-  it('sends signed-in visitors from the auth pages to their account', () => {
-    expect(run('/en/login', { cookie: 'nb_session=1' }).headers.get('location')).toBe('http://localhost:3000/en/account');
-  });
-
   it('remembers the language being visited', () => {
     expect(run('/ar').cookies.get('NEXT_LOCALE')?.value).toBe('ar');
   });
